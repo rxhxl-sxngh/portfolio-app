@@ -33,7 +33,6 @@ class VisualizerEngine {
   // Outer rim psychedelic effects
   rimPulsers: any[] = []
   rimWaveRings: any[] = []
-  rimParticleStorms: any[] = []
   rimDimensionalTears: any[] = []
   rimEnergyTentacles: any[] = []
   
@@ -130,7 +129,6 @@ class VisualizerEngine {
     // Create outer rim psychedelic effects
     this.createRimPulsers()
     this.createRimWaveRings()
-    this.createRimParticleStorms()
     this.createRimDimensionalTears()
     this.createRimEnergyTentacles()
   }
@@ -443,7 +441,7 @@ class VisualizerEngine {
     const THREE = window.THREE
     
     for (let i = 0; i < 6; i++) {
-      const geometry = new THREE.RingGeometry(80 + i * 15, 85 + i * 15, 64, 1)
+      const geometry = new THREE.RingGeometry(60 + i * 10, 64 + i * 10, 64, 1)
       const material = new THREE.ShaderMaterial({
         uniforms: {
           time: { value: 0 },
@@ -507,86 +505,6 @@ class VisualizerEngine {
     }
   }
 
-  createRimParticleStorms() {
-    const THREE = window.THREE
-    
-    const particleCount = 200
-    const positions = new Float32Array(particleCount * 3)
-    const colors = new Float32Array(particleCount * 3)
-    const sizes = new Float32Array(particleCount)
-    
-    for (let i = 0; i < particleCount; i++) {
-      const angle = Math.random() * Math.PI * 2
-      const radius = 100 + Math.random() * 60
-      const height = (Math.random() - 0.5) * 100
-      
-      positions[i * 3] = Math.cos(angle) * radius
-      positions[i * 3 + 1] = Math.sin(angle) * radius
-      positions[i * 3 + 2] = height
-      
-      colors[i * 3] = Math.random()
-      colors[i * 3 + 1] = Math.random()
-      colors[i * 3 + 2] = Math.random()
-      
-      sizes[i] = Math.random() * 3 + 1
-    }
-    
-    const geometry = new THREE.BufferGeometry()
-    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
-    geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3))
-    geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1))
-    
-    const material = new THREE.ShaderMaterial({
-      uniforms: {
-        time: { value: 0 },
-        bassLevel: { value: 0 },
-        highLevel: { value: 0 }
-      },
-      vertexShader: `
-        attribute float size;
-        attribute vec3 color;
-        uniform float time;
-        uniform float bassLevel;
-        uniform float highLevel;
-        varying vec3 vColor;
-        varying float vOpacity;
-        
-        void main() {
-          vColor = color;
-          
-          vec3 pos = position;
-          float chaos = sin(time * 2.0 + pos.x * 0.01) * cos(time * 1.5 + pos.y * 0.01);
-          pos += chaos * (5.0 + bassLevel * 15.0);
-          
-          float pulse = sin(time * 8.0 + length(pos) * 0.02) * highLevel;
-          vOpacity = 0.3 + pulse * 0.7;
-          
-          vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
-          gl_PointSize = size * (300.0 / -mvPosition.z) * (1.0 + bassLevel * 2.0);
-          gl_Position = projectionMatrix * mvPosition;
-        }
-      `,
-      fragmentShader: `
-        varying vec3 vColor;
-        varying float vOpacity;
-        
-        void main() {
-          float distanceToCenter = length(gl_PointCoord - vec2(0.5));
-          if (distanceToCenter > 0.5) discard;
-          
-          float alpha = 1.0 - distanceToCenter * 2.0;
-          gl_FragColor = vec4(vColor, alpha * vOpacity);
-        }
-      `,
-      transparent: true,
-      blending: THREE.AdditiveBlending,
-      vertexColors: true
-    })
-    
-    const particles = new THREE.Points(geometry, material)
-    this.rimParticleStorms.push(particles)
-    this.scene.add(particles)
-  }
 
   createRimDimensionalTears() {
     const THREE = window.THREE
@@ -751,7 +669,7 @@ class VisualizerEngine {
       
       const tentacle = new THREE.Mesh(geometry, material)
       this.rimEnergyTentacles.push(tentacle)
-      this.scene.add(tentacle)
+      // this.scene.add(tentacle)  // Temporarily hidden
     }
   }
 
@@ -970,27 +888,6 @@ class VisualizerEngine {
         ring.scale.setScalar(scale)
       })
 
-      // Update rim particle storms
-      this.rimParticleStorms.forEach((particles) => {
-        particles.material.uniforms.time.value = this.time
-        particles.material.uniforms.bassLevel.value = this.bassLevel
-        particles.material.uniforms.highLevel.value = this.highLevel
-        
-        // Chaotic rotation
-        particles.rotation.y += 0.005 + this.bassLevel * 0.02
-        particles.rotation.z += 0.003 + this.highLevel * 0.015
-        
-        // Update particle positions for extra chaos
-        const positions = particles.geometry.attributes.position.array
-        for (let i = 0; i < positions.length; i += 3) {
-          const originalRadius = Math.sqrt(positions[i] * positions[i] + positions[i + 1] * positions[i + 1])
-          if (originalRadius > 90) {
-            const chaos = Math.sin(this.time * 4 + i) * this.bassLevel * 10
-            positions[i + 2] += chaos * 0.1
-          }
-        }
-        particles.geometry.attributes.position.needsUpdate = true
-      })
 
       // Update rim dimensional tears
       this.rimDimensionalTears.forEach((tear, index) => {
