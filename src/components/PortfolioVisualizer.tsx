@@ -30,6 +30,13 @@ class VisualizerEngine {
   lightBeams: any[] = []
   tunnelGeometry: any = null
   
+  // Outer rim psychedelic effects
+  rimPulsers: any[] = []
+  rimWaveRings: any[] = []
+  rimParticleStorms: any[] = []
+  rimDimensionalTears: any[] = []
+  rimEnergyTentacles: any[] = []
+  
   // Animation parameters
   time: number = 0
   bassLevel: number = 0
@@ -119,6 +126,13 @@ class VisualizerEngine {
     this.createColorShiftingRings()
     this.createFluidGeometry()
     this.createLightBeams()
+    
+    // Create outer rim psychedelic effects
+    this.createRimPulsers()
+    this.createRimWaveRings()
+    this.createRimParticleStorms()
+    this.createRimDimensionalTears()
+    this.createRimEnergyTentacles()
   }
 
   createKaleidoscope() {
@@ -351,6 +365,396 @@ class VisualizerEngine {
     }
   }
 
+  createRimPulsers() {
+    const THREE = window.THREE
+    
+    for (let i = 0; i < 24; i++) {
+      const geometry = new THREE.SphereGeometry(2, 8, 6)
+      const material = new THREE.ShaderMaterial({
+        uniforms: {
+          time: { value: 0 },
+          bassLevel: { value: 0 },
+          midLevel: { value: 0 },
+          highLevel: { value: 0 },
+          pulsePhase: { value: i * 0.26 }
+        },
+        vertexShader: `
+          uniform float time;
+          uniform float bassLevel;
+          uniform float pulsePhase;
+          varying vec3 vPosition;
+          varying vec3 vNormal;
+          
+          void main() {
+            vNormal = normal;
+            vPosition = position;
+            
+            vec3 pos = position;
+            float pulse = sin(time * 4.0 + pulsePhase) * bassLevel * 3.0;
+            pos *= (1.0 + pulse);
+            
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+          }
+        `,
+        fragmentShader: `
+          uniform float time;
+          uniform float bassLevel;
+          uniform float midLevel;
+          uniform float highLevel;
+          uniform float pulsePhase;
+          varying vec3 vPosition;
+          varying vec3 vNormal;
+          
+          void main() {
+            float intensity = bassLevel + midLevel * 0.5;
+            float hue = mod(time * 0.5 + pulsePhase + intensity, 1.0);
+            
+            vec3 color = vec3(
+              sin(hue * 6.28318) * 0.5 + 0.5,
+              sin(hue * 6.28318 + 2.09439) * 0.5 + 0.5,
+              sin(hue * 6.28318 + 4.18879) * 0.5 + 0.5
+            );
+            
+            float rim = 1.0 - abs(dot(vNormal, vec3(0, 0, 1)));
+            float glow = pow(rim, 2.0) * (1.0 + intensity * 2.0);
+            
+            gl_FragColor = vec4(color * glow, 0.8 + bassLevel * 0.2);
+          }
+        `,
+        transparent: true,
+        blending: THREE.AdditiveBlending
+      })
+      
+      const sphere = new THREE.Mesh(geometry, material)
+      const angle = (i / 24) * Math.PI * 2
+      const radius = 120 + Math.sin(i * 0.7) * 20
+      sphere.position.set(
+        Math.cos(angle) * radius,
+        Math.sin(angle) * radius,
+        (Math.random() - 0.5) * 40
+      )
+      
+      this.rimPulsers.push(sphere)
+      this.scene.add(sphere)
+    }
+  }
+
+  createRimWaveRings() {
+    const THREE = window.THREE
+    
+    for (let i = 0; i < 6; i++) {
+      const geometry = new THREE.RingGeometry(80 + i * 15, 85 + i * 15, 64, 1)
+      const material = new THREE.ShaderMaterial({
+        uniforms: {
+          time: { value: 0 },
+          bassLevel: { value: 0 },
+          midLevel: { value: 0 },
+          ringIndex: { value: i }
+        },
+        vertexShader: `
+          uniform float time;
+          uniform float bassLevel;
+          uniform float ringIndex;
+          varying vec2 vUv;
+          varying vec3 vPosition;
+          
+          void main() {
+            vUv = uv;
+            vPosition = position;
+            
+            vec3 pos = position;
+            float wave = sin(atan(pos.y, pos.x) * 8.0 + time * 3.0 + ringIndex) * bassLevel * 5.0;
+            pos.z += wave;
+            
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+          }
+        `,
+        fragmentShader: `
+          uniform float time;
+          uniform float bassLevel;
+          uniform float midLevel;
+          uniform float ringIndex;
+          varying vec2 vUv;
+          varying vec3 vPosition;
+          
+          void main() {
+            float angle = atan(vPosition.y, vPosition.x);
+            float wave = sin(angle * 12.0 + time * 2.0) * 0.5 + 0.5;
+            float pulse = sin(time * 6.0 + ringIndex) * midLevel;
+            
+            float hue = mod(time * 0.3 + ringIndex * 0.2 + wave, 1.0);
+            vec3 color = vec3(
+              sin(hue * 6.28318 + 1.0) * 0.5 + 0.5,
+              sin(hue * 6.28318 + 3.0) * 0.5 + 0.5,
+              sin(hue * 6.28318 + 5.0) * 0.5 + 0.5
+            );
+            
+            float opacity = (wave + pulse) * (0.4 + bassLevel * 0.6);
+            gl_FragColor = vec4(color, opacity);
+          }
+        `,
+        transparent: true,
+        side: THREE.DoubleSide,
+        blending: THREE.AdditiveBlending
+      })
+      
+      const ring = new THREE.Mesh(geometry, material)
+      ring.rotation.x = Math.PI / 2 + (Math.random() - 0.5) * 0.3
+      ring.rotation.y = (Math.random() - 0.5) * 0.2
+      
+      this.rimWaveRings.push(ring)
+      this.scene.add(ring)
+    }
+  }
+
+  createRimParticleStorms() {
+    const THREE = window.THREE
+    
+    const particleCount = 200
+    const positions = new Float32Array(particleCount * 3)
+    const colors = new Float32Array(particleCount * 3)
+    const sizes = new Float32Array(particleCount)
+    
+    for (let i = 0; i < particleCount; i++) {
+      const angle = Math.random() * Math.PI * 2
+      const radius = 100 + Math.random() * 60
+      const height = (Math.random() - 0.5) * 100
+      
+      positions[i * 3] = Math.cos(angle) * radius
+      positions[i * 3 + 1] = Math.sin(angle) * radius
+      positions[i * 3 + 2] = height
+      
+      colors[i * 3] = Math.random()
+      colors[i * 3 + 1] = Math.random()
+      colors[i * 3 + 2] = Math.random()
+      
+      sizes[i] = Math.random() * 3 + 1
+    }
+    
+    const geometry = new THREE.BufferGeometry()
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
+    geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3))
+    geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1))
+    
+    const material = new THREE.ShaderMaterial({
+      uniforms: {
+        time: { value: 0 },
+        bassLevel: { value: 0 },
+        highLevel: { value: 0 }
+      },
+      vertexShader: `
+        attribute float size;
+        attribute vec3 color;
+        uniform float time;
+        uniform float bassLevel;
+        uniform float highLevel;
+        varying vec3 vColor;
+        varying float vOpacity;
+        
+        void main() {
+          vColor = color;
+          
+          vec3 pos = position;
+          float chaos = sin(time * 2.0 + pos.x * 0.01) * cos(time * 1.5 + pos.y * 0.01);
+          pos += chaos * (5.0 + bassLevel * 15.0);
+          
+          float pulse = sin(time * 8.0 + length(pos) * 0.02) * highLevel;
+          vOpacity = 0.3 + pulse * 0.7;
+          
+          vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
+          gl_PointSize = size * (300.0 / -mvPosition.z) * (1.0 + bassLevel * 2.0);
+          gl_Position = projectionMatrix * mvPosition;
+        }
+      `,
+      fragmentShader: `
+        varying vec3 vColor;
+        varying float vOpacity;
+        
+        void main() {
+          float distanceToCenter = length(gl_PointCoord - vec2(0.5));
+          if (distanceToCenter > 0.5) discard;
+          
+          float alpha = 1.0 - distanceToCenter * 2.0;
+          gl_FragColor = vec4(vColor, alpha * vOpacity);
+        }
+      `,
+      transparent: true,
+      blending: THREE.AdditiveBlending,
+      vertexColors: true
+    })
+    
+    const particles = new THREE.Points(geometry, material)
+    this.rimParticleStorms.push(particles)
+    this.scene.add(particles)
+  }
+
+  createRimDimensionalTears() {
+    const THREE = window.THREE
+    
+    for (let i = 0; i < 8; i++) {
+      const geometry = new THREE.PlaneGeometry(30, 80, 32, 32)
+      const material = new THREE.ShaderMaterial({
+        uniforms: {
+          time: { value: 0 },
+          bassLevel: { value: 0 },
+          midLevel: { value: 0 },
+          tearPhase: { value: i * 0.785 }
+        },
+        vertexShader: `
+          uniform float time;
+          uniform float bassLevel;
+          uniform float tearPhase;
+          varying vec2 vUv;
+          varying vec3 vPosition;
+          
+          void main() {
+            vUv = uv;
+            vPosition = position;
+            
+            vec3 pos = position;
+            float distortion = sin(pos.y * 0.1 + time * 2.0 + tearPhase) * cos(pos.x * 0.05 + time);
+            pos.z += distortion * (3.0 + bassLevel * 10.0);
+            pos.x += sin(time + tearPhase) * bassLevel * 5.0;
+            
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+          }
+        `,
+        fragmentShader: `
+          uniform float time;
+          uniform float bassLevel;
+          uniform float midLevel;
+          uniform float tearPhase;
+          varying vec2 vUv;
+          varying vec3 vPosition;
+          
+          void main() {
+            vec2 center = vec2(0.5, 0.5);
+            float dist = distance(vUv, center);
+            
+            float tear = 1.0 - smoothstep(0.0, 0.5, abs(vUv.x - 0.5));
+            tear *= sin(vUv.y * 10.0 + time * 3.0 + tearPhase) * 0.5 + 0.5;
+            
+            float energy = sin(time * 4.0 + tearPhase) * midLevel;
+            float hue = mod(tearPhase + energy + time * 0.2, 1.0);
+            
+            vec3 color = vec3(
+              sin(hue * 6.28318) * 0.5 + 0.5,
+              sin(hue * 6.28318 + 2.0) * 0.5 + 0.5,
+              sin(hue * 6.28318 + 4.0) * 0.5 + 0.5
+            );
+            
+            float alpha = tear * (0.6 + bassLevel * 0.4);
+            gl_FragColor = vec4(color, alpha);
+          }
+        `,
+        transparent: true,
+        side: THREE.DoubleSide,
+        blending: THREE.AdditiveBlending
+      })
+      
+      const plane = new THREE.Mesh(geometry, material)
+      const angle = (i / 8) * Math.PI * 2
+      const radius = 140
+      plane.position.set(
+        Math.cos(angle) * radius,
+        Math.sin(angle) * radius,
+        0
+      )
+      plane.lookAt(new THREE.Vector3(0, 0, 0))
+      
+      this.rimDimensionalTears.push(plane)
+      this.scene.add(plane)
+    }
+  }
+
+  createRimEnergyTentacles() {
+    const THREE = window.THREE
+    
+    for (let i = 0; i < 12; i++) {
+      const points = []
+      const segments = 20
+      const angle = (i / 12) * Math.PI * 2
+      const baseRadius = 110
+      
+      for (let j = 0; j <= segments; j++) {
+        const t = j / segments
+        const radius = baseRadius + t * 40
+        const twist = t * Math.PI * 3 + angle
+        const wobble = Math.sin(t * Math.PI * 4) * 10
+        
+        points.push(new THREE.Vector3(
+          Math.cos(angle) * radius + Math.cos(twist) * wobble,
+          Math.sin(angle) * radius + Math.sin(twist) * wobble,
+          (t - 0.5) * 60 + Math.sin(t * Math.PI * 2) * 20
+        ))
+      }
+      
+      const geometry = new THREE.TubeGeometry(
+        new THREE.CatmullRomCurve3(points),
+        segments,
+        1 + Math.random() * 2,
+        8,
+        false
+      )
+      
+      const material = new THREE.ShaderMaterial({
+        uniforms: {
+          time: { value: 0 },
+          bassLevel: { value: 0 },
+          highLevel: { value: 0 },
+          tentaclePhase: { value: i * 0.523 }
+        },
+        vertexShader: `
+          uniform float time;
+          uniform float bassLevel;
+          uniform float tentaclePhase;
+          varying vec2 vUv;
+          varying vec3 vPosition;
+          
+          void main() {
+            vUv = uv;
+            vPosition = position;
+            
+            vec3 pos = position;
+            float wave = sin(vUv.x * 10.0 + time * 5.0 + tentaclePhase) * bassLevel * 3.0;
+            pos += normal * wave;
+            
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+          }
+        `,
+        fragmentShader: `
+          uniform float time;
+          uniform float bassLevel;
+          uniform float highLevel;
+          uniform float tentaclePhase;
+          varying vec2 vUv;
+          varying vec3 vPosition;
+          
+          void main() {
+            float pulse = sin(vUv.x * 5.0 + time * 8.0 + tentaclePhase) * 0.5 + 0.5;
+            float energy = pulse * (bassLevel + highLevel);
+            
+            float hue = mod(tentaclePhase + energy + time * 0.4, 1.0);
+            vec3 color = vec3(
+              sin(hue * 6.28318 + 0.5) * 0.5 + 0.5,
+              sin(hue * 6.28318 + 2.5) * 0.5 + 0.5,
+              sin(hue * 6.28318 + 4.5) * 0.5 + 0.5
+            );
+            
+            float alpha = energy * (0.5 + pulse * 0.5);
+            gl_FragColor = vec4(color, alpha);
+          }
+        `,
+        transparent: true,
+        blending: THREE.AdditiveBlending
+      })
+      
+      const tentacle = new THREE.Mesh(geometry, material)
+      this.rimEnergyTentacles.push(tentacle)
+      this.scene.add(tentacle)
+    }
+  }
+
   setupAudio() {
     if (!this.audioContext) {
       this.audioContext = new (window.AudioContext || (window as any).webkitAudioContext)()
@@ -533,6 +937,91 @@ class VisualizerEngine {
         beam.position.y = Math.sin(angle) * (25 + this.bassLevel * 10)
         beam.material.opacity = 0.4 + this.highLevel * 0.4
         beam.scale.y = 1 + this.midLevel * 2
+      })
+
+      // Update rim pulsers
+      this.rimPulsers.forEach((pulser, index) => {
+        pulser.material.uniforms.time.value = this.time
+        pulser.material.uniforms.bassLevel.value = this.bassLevel
+        pulser.material.uniforms.midLevel.value = this.midLevel
+        pulser.material.uniforms.highLevel.value = this.highLevel
+        
+        // Orbital movement
+        const angle = (index / 24) * Math.PI * 2 + this.time * 0.3
+        const radius = 120 + Math.sin(index * 0.7 + this.time) * 20 + this.bassLevel * 25
+        pulser.position.x = Math.cos(angle) * radius
+        pulser.position.y = Math.sin(angle) * radius
+        pulser.position.z = Math.sin(this.time * 2 + index) * (20 + this.midLevel * 30)
+        
+        // Chaotic rotation
+        pulser.rotation.x += 0.02 + this.bassLevel * 0.1
+        pulser.rotation.y += 0.03 + this.highLevel * 0.08
+      })
+
+      // Update rim wave rings
+      this.rimWaveRings.forEach((ring, index) => {
+        ring.material.uniforms.time.value = this.time
+        ring.material.uniforms.bassLevel.value = this.bassLevel
+        ring.material.uniforms.midLevel.value = this.midLevel
+        
+        // Dynamic rotation and scaling
+        ring.rotation.z += 0.01 + this.bassLevel * 0.04
+        const scale = 1 + Math.sin(this.time * 3 + index) * 0.2 + this.midLevel * 0.5
+        ring.scale.setScalar(scale)
+      })
+
+      // Update rim particle storms
+      this.rimParticleStorms.forEach((particles) => {
+        particles.material.uniforms.time.value = this.time
+        particles.material.uniforms.bassLevel.value = this.bassLevel
+        particles.material.uniforms.highLevel.value = this.highLevel
+        
+        // Chaotic rotation
+        particles.rotation.y += 0.005 + this.bassLevel * 0.02
+        particles.rotation.z += 0.003 + this.highLevel * 0.015
+        
+        // Update particle positions for extra chaos
+        const positions = particles.geometry.attributes.position.array
+        for (let i = 0; i < positions.length; i += 3) {
+          const originalRadius = Math.sqrt(positions[i] * positions[i] + positions[i + 1] * positions[i + 1])
+          if (originalRadius > 90) {
+            const chaos = Math.sin(this.time * 4 + i) * this.bassLevel * 10
+            positions[i + 2] += chaos * 0.1
+          }
+        }
+        particles.geometry.attributes.position.needsUpdate = true
+      })
+
+      // Update rim dimensional tears
+      this.rimDimensionalTears.forEach((tear, index) => {
+        tear.material.uniforms.time.value = this.time
+        tear.material.uniforms.bassLevel.value = this.bassLevel
+        tear.material.uniforms.midLevel.value = this.midLevel
+        
+        // Unstable movement
+        const angle = (index / 8) * Math.PI * 2 + this.time * 0.2
+        const radius = 140 + Math.sin(this.time * 3 + index) * 15 + this.bassLevel * 20
+        tear.position.x = Math.cos(angle) * radius
+        tear.position.y = Math.sin(angle) * radius
+        tear.position.z = Math.sin(this.time * 4 + index) * (10 + this.midLevel * 20)
+        
+        // Wobbling rotation
+        tear.rotation.z += 0.01 + this.bassLevel * 0.05
+      })
+
+      // Update rim energy tentacles
+      this.rimEnergyTentacles.forEach((tentacle, index) => {
+        tentacle.material.uniforms.time.value = this.time
+        tentacle.material.uniforms.bassLevel.value = this.bassLevel
+        tentacle.material.uniforms.highLevel.value = this.highLevel
+        
+        // Writhing movement
+        tentacle.rotation.y += 0.02 + this.bassLevel * 0.06
+        tentacle.rotation.z += 0.01 + this.highLevel * 0.04
+        
+        // Scale pulsing
+        const scale = 1 + Math.sin(this.time * 5 + index) * 0.3 + this.bassLevel * 0.8
+        tentacle.scale.setScalar(scale)
       })
 
       // Intense camera movement
