@@ -36,6 +36,9 @@ class VisualizerEngine {
   rimDimensionalTears: any[] = []
   rimEnergyTentacles: any[] = []
   
+  // Northern lights camera rim glow
+  northernLightsElements: any[] = []
+  
   // Animation parameters
   time: number = 0
   bassLevel: number = 0
@@ -131,6 +134,9 @@ class VisualizerEngine {
     this.createRimWaveRings()
     this.createRimDimensionalTears()
     this.createRimEnergyTentacles()
+    
+    // Create northern lights camera rim glow
+    this.createNorthernLightsGlow()
   }
 
   createKaleidoscope() {
@@ -673,6 +679,210 @@ class VisualizerEngine {
     }
   }
 
+  createNorthernLightsGlow() {
+    const THREE = window.THREE
+    
+    // Create multiple aurora curtains around camera rim
+    for (let i = 0; i < 8; i++) {
+      const geometry = new THREE.PlaneGeometry(400, 600, 64, 64)
+      const material = new THREE.ShaderMaterial({
+        uniforms: {
+          time: { value: 0 },
+          bassLevel: { value: 0 },
+          midLevel: { value: 0 },
+          highLevel: { value: 0 },
+          auroraPhase: { value: i * 0.785 },
+          cameraPosition: { value: new THREE.Vector3() }
+        },
+        vertexShader: `
+          uniform float time;
+          uniform float bassLevel;
+          uniform float auroraPhase;
+          varying vec2 vUv;
+          varying vec3 vPosition;
+          varying vec3 vWorldPosition;
+          
+          void main() {
+            vUv = uv;
+            vPosition = position;
+            
+            vec3 pos = position;
+            
+            // Create flowing aurora waves
+            float wave1 = sin(pos.y * 0.01 + time * 1.5 + auroraPhase) * 20.0;
+            float wave2 = cos(pos.y * 0.008 + time * 2.0) * 15.0;
+            float wave3 = sin(pos.y * 0.012 + time * 0.8 + auroraPhase * 2.0) * 25.0;
+            
+            pos.z += (wave1 + wave2 + wave3) * (1.0 + bassLevel * 2.0);
+            pos.x += sin(pos.y * 0.005 + time + auroraPhase) * (10.0 + bassLevel * 15.0);
+            
+            vWorldPosition = (modelMatrix * vec4(pos, 1.0)).xyz;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+          }
+        `,
+        fragmentShader: `
+          uniform float time;
+          uniform float bassLevel;
+          uniform float midLevel;
+          uniform float highLevel;
+          uniform float auroraPhase;
+          uniform vec3 cameraPosition;
+          varying vec2 vUv;
+          varying vec3 vPosition;
+          varying vec3 vWorldPosition;
+          
+          // Northern lights color palette
+          vec3 aurora_green = vec3(0.0, 1.0, 0.3);
+          vec3 aurora_blue = vec3(0.0, 0.5, 1.0);
+          vec3 aurora_purple = vec3(0.8, 0.2, 1.0);
+          vec3 aurora_pink = vec3(1.0, 0.2, 0.8);
+          
+          void main() {
+            // Distance from camera for rim effect
+            float distanceFromCamera = distance(vWorldPosition, cameraPosition);
+            float rimEffect = 1.0 - smoothstep(180.0, 250.0, distanceFromCamera);
+            
+            // Create flowing northern lights patterns
+            float y_coord = vUv.y;
+            float x_coord = vUv.x;
+            
+            // Multiple wave layers for aurora effect
+            float wave1 = sin(y_coord * 8.0 + time * 2.0 + auroraPhase) * 0.5 + 0.5;
+            float wave2 = sin(y_coord * 12.0 + time * 1.5 + auroraPhase * 1.3) * 0.5 + 0.5;
+            float wave3 = sin(y_coord * 6.0 + time * 3.0 + auroraPhase * 0.7) * 0.5 + 0.5;
+            
+            // Combine waves for aurora curtain effect
+            float aurora_intensity = (wave1 * 0.4 + wave2 * 0.3 + wave3 * 0.3);
+            
+            // Vertical gradient for aurora shape
+            float vertical_fade = smoothstep(0.0, 0.3, y_coord) * smoothstep(1.0, 0.7, y_coord);
+            
+            // Horizontal edge fade for rim effect
+            float horizontal_fade = smoothstep(0.4, 0.0, abs(x_coord - 0.5));
+            
+            // Audio reactive intensity
+            float audio_boost = 1.0 + bassLevel * 1.5 + midLevel * 0.8 + highLevel * 0.5;
+            
+            // Color mixing based on phase and audio
+            float color_phase = mod(auroraPhase + time * 0.3 + aurora_intensity * 0.5, 1.0);
+            vec3 color;
+            
+            if (color_phase < 0.25) {
+              color = mix(aurora_green, aurora_blue, color_phase * 4.0);
+            } else if (color_phase < 0.5) {
+              color = mix(aurora_blue, aurora_purple, (color_phase - 0.25) * 4.0);
+            } else if (color_phase < 0.75) {
+              color = mix(aurora_purple, aurora_pink, (color_phase - 0.5) * 4.0);
+            } else {
+              color = mix(aurora_pink, aurora_green, (color_phase - 0.75) * 4.0);
+            }
+            
+            // Final aurora opacity
+            float alpha = aurora_intensity * vertical_fade * horizontal_fade * rimEffect * audio_boost * 0.6;
+            
+            // Add shimmering effect
+            float shimmer = sin(time * 8.0 + vPosition.x * 0.1 + vPosition.y * 0.05) * 0.1 + 0.9;
+            alpha *= shimmer;
+            
+            gl_FragColor = vec4(color, alpha);
+          }
+        `,
+        transparent: true,
+        side: THREE.DoubleSide,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false
+      })
+      
+      const aurora = new THREE.Mesh(geometry, material)
+      
+      // Position auroras around the camera rim
+      const angle = (i / 8) * Math.PI * 2
+      const distance = 200
+      aurora.position.set(
+        Math.cos(angle) * distance,
+        0,
+        Math.sin(angle) * distance
+      )
+      
+      // Rotate to face outward from center
+      aurora.lookAt(
+        aurora.position.x * 2,
+        aurora.position.y,
+        aurora.position.z * 2
+      )
+      
+      this.northernLightsElements.push(aurora)
+      this.scene.add(aurora)
+    }
+    
+    // Add rim glow particles
+    for (let i = 0; i < 50; i++) {
+      const geometry = new THREE.SphereGeometry(1, 8, 6)
+      const material = new THREE.ShaderMaterial({
+        uniforms: {
+          time: { value: 0 },
+          bassLevel: { value: 0 },
+          particlePhase: { value: Math.random() * Math.PI * 2 }
+        },
+        vertexShader: `
+          uniform float time;
+          uniform float bassLevel;
+          uniform float particlePhase;
+          varying vec3 vPosition;
+          
+          void main() {
+            vPosition = position;
+            
+            vec3 pos = position;
+            float pulse = sin(time * 3.0 + particlePhase) * bassLevel * 2.0;
+            pos *= (1.0 + pulse);
+            
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+          }
+        `,
+        fragmentShader: `
+          uniform float time;
+          uniform float bassLevel;
+          uniform float particlePhase;
+          varying vec3 vPosition;
+          
+          void main() {
+            float intensity = sin(time * 4.0 + particlePhase) * 0.5 + 0.5;
+            intensity *= (0.8 + bassLevel * 0.4);
+            
+            // Northern lights colors
+            vec3 color = vec3(
+              sin(particlePhase + time * 0.5) * 0.3 + 0.7,
+              sin(particlePhase + time * 0.5 + 2.0) * 0.4 + 0.6,
+              sin(particlePhase + time * 0.5 + 4.0) * 0.5 + 0.5
+            );
+            
+            float alpha = intensity * 0.8;
+            gl_FragColor = vec4(color, alpha);
+          }
+        `,
+        transparent: true,
+        blending: THREE.AdditiveBlending
+      })
+      
+      const particle = new THREE.Mesh(geometry, material)
+      
+      // Position particles around rim
+      const angle = Math.random() * Math.PI * 2
+      const radius = 180 + Math.random() * 40
+      const height = (Math.random() - 0.5) * 200
+      
+      particle.position.set(
+        Math.cos(angle) * radius,
+        height,
+        Math.sin(angle) * radius
+      )
+      
+      this.northernLightsElements.push(particle)
+      this.scene.add(particle)
+    }
+  }
+
   setupAudio() {
     if (!this.audioContext) {
       this.audioContext = new (window.AudioContext || (window as any).webkitAudioContext)()
@@ -921,10 +1131,37 @@ class VisualizerEngine {
         tentacle.scale.setScalar(scale)
       })
 
+      // Update northern lights glow
+      this.northernLightsElements.forEach((element, index) => {
+        if (element.material.uniforms) {
+          element.material.uniforms.time.value = this.time
+          element.material.uniforms.bassLevel.value = this.bassLevel
+          
+          // Update camera position for rim effect calculation
+          if (element.material.uniforms.cameraPosition) {
+            element.material.uniforms.cameraPosition.value.copy(this.camera.position)
+            element.material.uniforms.midLevel.value = this.midLevel
+            element.material.uniforms.highLevel.value = this.highLevel
+          }
+        }
+        
+        // Gentle floating motion for aurora curtains
+        if (index < 8) { // Aurora curtains
+          element.position.y += Math.sin(this.time * 0.5 + index) * 0.5
+          element.rotation.z += 0.002 + this.bassLevel * 0.01
+        } else { // Particles
+          // Floating particle movement
+          const particleIndex = index - 8
+          element.position.y += Math.sin(this.time * 2 + particleIndex * 0.3) * 0.3
+          element.position.x += Math.cos(this.time * 1.5 + particleIndex * 0.4) * 0.2
+          element.position.z += Math.sin(this.time * 1.8 + particleIndex * 0.5) * 0.2
+        }
+      })
+
       // Intense camera movement
       this.camera.position.x = Math.sin(this.time * 0.3 + this.bassLevel) * (25 + this.bassLevel * 30)
-      this.camera.position.y = Math.cos(this.time * 0.2 + this.midLevel) * (20 + this.midLevel * 25)
-      this.camera.position.z = 200 + Math.sin(this.time * 0.1) * (40 + this.highLevel * 50)
+      this.camera.position.y = 30 + Math.abs(Math.cos(this.time * 0.2 + this.midLevel)) * (20 + this.midLevel * 25)
+      this.camera.position.z = 230 + Math.sin(this.time * 0.1) * (10 + this.highLevel * 50)
       
       // Camera rotation based on audio
       this.camera.rotation.z = Math.sin(this.time + this.bassLevel) * 0.1
