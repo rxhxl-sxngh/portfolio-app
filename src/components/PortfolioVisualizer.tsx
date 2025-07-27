@@ -1263,7 +1263,7 @@ const PortfolioVisualizer: React.FC = () => {
       <div id="ui-overlay">
         <div className="portfolio-header">
           <div>Rahul Singh</div>
-          <div style={{ fontSize: '1rem', marginTop: '10px', opacity: 0.8 }}>EXPERIENCE</div>
+          <div style={{ fontSize: '1rem', marginTop: '10px', opacity: 0.8 }}>CRAFT EXPERIENCES WORTH REMEMBERING.</div>
         </div>
         
         {/* Left Navigation */}
@@ -1434,12 +1434,11 @@ const PortfolioVisualizer: React.FC = () => {
         </audio>
 
         <div className="audio-permission" id="audioPermission">
-          <div style={{ fontSize: '1.5rem', marginBottom: '15px' }}>🎵 AUDIO VISUALIZER</div>
+          <div style={{ fontSize: '1.5rem', marginBottom: '15px' }}>🎵 WELCOME TO MY PAGE</div>
           <div style={{ fontSize: '0.9rem', opacity: 0.8, marginTop: '10px' }}>
-            The music will start automatically and loop continuously.<br />
-            The 3D visuals will react to the real audio frequencies.
+            Best experienced with sound on.<br />
           </div>
-          <button id="enableAudio">ENABLE VISUAL EXPERIENCE</button>
+          <button id="enableAudio">MEET ME</button>
         </div>
 
         <div className="loading" id="loading">
