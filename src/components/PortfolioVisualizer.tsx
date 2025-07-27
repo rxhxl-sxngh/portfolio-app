@@ -937,7 +937,6 @@ class VisualizerEngine {
 
   updateVisuals() {
     this.time += 0.01
-    const THREE = window.THREE
 
     if (this.effectsEnabled) {
       // Update kaleidoscope
