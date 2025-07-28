@@ -91,6 +91,20 @@
   text-align: left;
 }
 
+.about-content a {
+  color: #00ffff;
+  text-decoration: none;
+  font-weight: bold;
+  text-shadow: 0 0 5px #00ffff;
+  transition: all 0.3s ease;
+}
+
+.about-content a:hover {
+  color: #ff00ff;
+  text-shadow: 0 0 8px #ff00ff;
+  text-decoration: underline;
+}
+
 .about-content h3 {
   color: #ff00ff;
   font-size: 1.4rem;

@@ -21,31 +21,14 @@ const ContentSections: React.FC<ContentSectionsProps> = ({ activeSection, onClos
           <h2>About Me</h2>
           <div className="about-content">
             <p>
-              I'm a driven senior pursuing a Bachelor of Science in Computer Science at Texas A&M University. 
-              My career aspirations center on becoming an innovative <strong>creator</strong>, with particular 
-              emphasis on developing scalable systems and advancing the field of machine learning.
+              I desperately want to craft experiences that people remember. <strong>People are the reason why I do the work I do. </strong> 
+              Oddly, that's what made just being a TA so rewarding for me - helping fellow students grasp complex programming concepts 
+              and watching them succeed. This passion led me to start <a href="https://www.quaternionstudios.com/" target="_blank" rel="noopener noreferrer">Quaternion Studios</a> with 
+              my brother where we strive to build memorable software experiences and work with unforgettable individuals.
             </p>
             <p>
-              <strong>I want to grow alongside the systems I build.</strong> I want to push myself to learn 
-              inconceivable amounts while shipping code that has an undeniable impact on the end product.
-            </p>
-            <p>
-              My professional experience includes working as an AI/ML engineer at NTT Data Corporation. 
-              I'm also a Co-Founder at Quaternion Studios, an independent agency specializing in building 
-              software for 2D/3D modeling within the web graphics sector.
-            </p>
-            <p>
-              I have also been fortunate enough to serve as a teaching assistant during my time at A&M. 
-              This is one of the most rewarding things I have done. I've deepened my technical understanding 
-              of important concepts such as Data Structures and algorithms while developing strong instructional 
-              capabilities, helping fellow students grasp complex programming concepts. This has also allowed 
-              me to become exceedingly comfortable with <strong>my favorite programming language - C++. 😊</strong>
-            </p>
-            <p>
-              Originally from Houston and now residing in Dallas, I maintain a well-rounded lifestyle outside 
-              of technology. I'm an avid photographer and enjoy water skiing during my leisure time. I am a 
-              huge Dallas Mavericks fan and if you want to ruin my day, mention the Luka trade. I love to 
-              hear about the world and other cultures - please reach out if you have interesting stories.
+              When I’m not designing experiences others will remember, I focus on building the ones that I'll never forget. I love traveling and going to music festivals.
+              If you have fun travel stories, please reach out so I can live vicariously through you and we can build a personal connection.
             </p>
             <div className="skills-section">
               <h3>Technical Skills</h3>
@@ -103,7 +86,14 @@ const ContentSections: React.FC<ContentSectionsProps> = ({ activeSection, onClos
                 <span>Japan</span>
               </div>
               <p><em>I sincerely hope I can contribute at least five more countries to this list before the end of 2025.</em></p>
+              <br></br>
+              <br></br>
             </div>
+            <p>
+              P.S. The song playing in the background of this page is <strong>fade together by itsmurph.</strong> He 
+              played this song the day after he officialy released it during a music festival I attended.
+              Listening to this song, with the sun setting over the Austin skyline in the distance, is truly a moment I'll never forget.
+            </p>
           </div>
         </div>
       )}
