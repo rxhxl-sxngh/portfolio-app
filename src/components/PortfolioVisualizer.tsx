@@ -62,7 +62,7 @@ const PortfolioVisualizer: React.FC = () => {
         <div className="loading" id="loading">
           <div>INITIALIZING VISUAL ENGINE</div>
           <div className="loading-spinner"></div>
-          <div style={{ fontSize: '1rem', opacity: 0.7 }}>Loading complete - Use audio player to start music</div>
+          <div style={{ fontSize: '1rem', opacity: 0.7 }}>Loading complete - listening for audio...</div>
         </div>
       </div>
     </div>
