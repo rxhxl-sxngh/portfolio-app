@@ -113,6 +113,23 @@ const ContentSections: React.FC<ContentSectionsProps> = ({ activeSection, onClos
           <div className="experience-content">
             
             <div 
+              className={`experience-card ${expandedExperience === 'cox-enterprises' ? 'expanded' : ''}`}
+              onClick={() => setExpandedExperience(expandedExperience === 'cox-enterprises' ? null : 'cox-enterprises')}
+            >
+              <div className="experience-header">
+                <h3>Software Engineer</h3>
+                <h4>Cox Enterprises</h4>
+                <p className="period">June 2025 - Present</p>
+              </div>
+              
+              {expandedExperience === 'cox-enterprises' && (
+                <div className="experience-details">
+                  <p><br></br>Details coming soon.</p>
+                </div>
+              )}
+            </div>
+
+            <div 
               className={`experience-card ${expandedExperience === 'ntt-data' ? 'expanded' : ''}`}
               onClick={() => setExpandedExperience(expandedExperience === 'ntt-data' ? null : 'ntt-data')}
             >
@@ -125,6 +142,7 @@ const ContentSections: React.FC<ContentSectionsProps> = ({ activeSection, onClos
               {expandedExperience === 'ntt-data' && (
                 <div className="experience-details">
                   <p>
+                    <br></br>
                     As an AI/ML Engineer at NTT Data Corporation, I was responsible for developing and implementing 
                     advanced machine learning solutions to enhance IT service management (ITSM) processes. My primary 
                     focus was on leveraging Natural Language Processing (NLP) and other AI technologies to automate 
@@ -218,6 +236,7 @@ const ContentSections: React.FC<ContentSectionsProps> = ({ activeSection, onClos
               {expandedExperience === 'teaching-assistant' && (
                 <div className="experience-details">
                   <p>
+                    <br></br>
                     As a teaching assistant for CSCE 121 (Introduction to Program Design and Concepts) and CSCE 221 
                     (Data Structures and Algorithms) at Texas A&M University, I played a crucial role in supporting 
                     undergraduate students learning fundamental computer science concepts and programming skills. This 
