@@ -6,6 +6,8 @@ interface ContentSectionsProps {
 }
 
 const ContentSections: React.FC<ContentSectionsProps> = ({ activeSection, onClose }) => {
+  const [expandedExperience, setExpandedExperience] = React.useState<string | null>(null)
+  
   if (!activeSection) return null
 
   return (
@@ -108,7 +110,215 @@ const ContentSections: React.FC<ContentSectionsProps> = ({ activeSection, onClos
       {activeSection === 'experience' && (
         <div className="section experience-section">
           <h2>Experience</h2>
-          <p>Content coming soon...</p>
+          <div className="experience-content">
+            
+            <div 
+              className={`experience-card ${expandedExperience === 'ntt-data' ? 'expanded' : ''}`}
+              onClick={() => setExpandedExperience(expandedExperience === 'ntt-data' ? null : 'ntt-data')}
+            >
+              <div className="experience-header">
+                <h3>AI/ML Engineer</h3>
+                <h4>NTT Data Corporation</h4>
+                <p className="period">January 2024 - December 2024</p>
+              </div>
+              
+              {expandedExperience === 'ntt-data' && (
+                <div className="experience-details">
+                  <p>
+                    As an AI/ML Engineer at NTT Data Corporation, I was responsible for developing and implementing 
+                    advanced machine learning solutions to enhance IT service management (ITSM) processes. My primary 
+                    focus was on leveraging Natural Language Processing (NLP) and other AI technologies to automate 
+                    and optimize incident resolution workflows.
+                  </p>
+
+                  <div className="achievements">
+                    <h5>Key Achievements</h5>
+                    <div className="achievement-items">
+                      <div className="achievement-item">
+                        <h6>NLP-Driven Resolution Prediction</h6>
+                        <p>
+                          Developed and implemented an NLP-driven application for incident/request resolution prediction, 
+                          trained on two years of ticket data, and seamlessly integrated the solution into the ITSM 
+                          platforms of 15+ client accounts. This system could analyze the content of incoming tickets 
+                          and recommend appropriate resolution actions based on historical patterns.
+                        </p>
+                      </div>
+
+                      <div className="achievement-item">
+                        <h6>Automated Resolution Process</h6>
+                        <p>
+                          Pioneered an automation process that streamlined resolutions and closed tickets for 60% of 
+                          incoming incidents and requests. This significantly reduced the manual workload for support 
+                          teams and decreased the average time to resolution across all client accounts.
+                        </p>
+                      </div>
+
+                      <div className="achievement-item">
+                        <h6>LLM Integration with RAG Techniques</h6>
+                        <p>
+                          Applied Retrieval-Augmented Generation (RAG) techniques to integrate Large Language Models (LLMs) 
+                          into client enterprises. These were tailored with data repositories, company applications, and 
+                          internal documents to enhance decision-making and deliver context-rich results.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="impact-results">
+                    <h5>Impact and Results</h5>
+                    <div className="impact-grid">
+                      <div className="impact-item">
+                        <h6>Efficiency Improvement</h6>
+                        <p>60% reduction in manual ticket handling, allowing support teams to focus on more complex tasks.</p>
+                      </div>
+                      <div className="impact-item">
+                        <h6>Resolution Time</h6>
+                        <p>96% decrease in average time to resolution for common incidents and service requests.</p>
+                      </div>
+                      <div className="impact-item">
+                        <h6>Client Satisfaction</h6>
+                        <p>Improved client satisfaction scores by 40% due to faster and more accurate resolution.</p>
+                      </div>
+                      <div className="impact-item">
+                        <h6>Knowledge Retention</h6>
+                        <p>Enhanced organizational knowledge retention by capturing resolution patterns from experienced teams.</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="tech-stack">
+                    <h5>Technologies Used</h5>
+                    <div className="tech-tags">
+                      <span>Python</span>
+                      <span>TensorFlow</span>
+                      <span>PyTorch</span>
+                      <span>HuggingFace Transformers</span>
+                      <span>SQL</span>
+                      <span>Docker</span>
+                      <span>FastAPI</span>
+                      <span>Azure ML</span>
+                      <span>Vector Databases (ChromaDB)</span>
+                      <span>REST APIs</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div 
+              className={`experience-card ${expandedExperience === 'teaching-assistant' ? 'expanded' : ''}`}
+              onClick={() => setExpandedExperience(expandedExperience === 'teaching-assistant' ? null : 'teaching-assistant')}
+            >
+              <div className="experience-header">
+                <h3>Teaching Assistant</h3>
+                <h4>Texas A&M University</h4>
+                <p className="period">August 2023 - May 2024</p>
+              </div>
+              
+              {expandedExperience === 'teaching-assistant' && (
+                <div className="experience-details">
+                  <p>
+                    As a teaching assistant for CSCE 121 (Introduction to Program Design and Concepts) and CSCE 221 
+                    (Data Structures and Algorithms) at Texas A&M University, I played a crucial role in supporting 
+                    undergraduate students learning fundamental computer science concepts and programming skills. This 
+                    position allowed me to deepen my own technical knowledge while developing important instructional 
+                    and mentorship capabilities.
+                  </p>
+
+                  <div className="achievements">
+                    <h5>Key Responsibilities</h5>
+                    <div className="achievement-items">
+                      <div className="achievement-item">
+                        <h6>Lab Instruction</h6>
+                        <p>
+                          Conducted weekly laboratory sessions for multiple student groups, providing hands-on instruction 
+                          and guidance on programming concepts in C++. These lab sessions were designed to reinforce and 
+                          extend the material covered in lectures, giving students practical experience with the concepts 
+                          they were learning.
+                        </p>
+                      </div>
+
+                      <div className="achievement-item">
+                        <h6>Material Development</h6>
+                        <p>
+                          Produced supplementary instructional materials to clarify complex Data Structures and Algorithms 
+                          concepts. This included creating detailed explanations, visual aids, and practice problems that 
+                          helped students better understand challenging topics like linked lists, trees, graphs, sorting 
+                          algorithms, and algorithm analysis.
+                        </p>
+                      </div>
+
+                      <div className="achievement-item">
+                        <h6>Student Guidance</h6>
+                        <p>
+                          Offered one-on-one guidance to students on utilizing various data structures and algorithms 
+                          through hands-on programming projects using C++ within a Linux environment. This individualized 
+                          support helped students overcome specific challenges they faced in their coursework and projects.
+                        </p>
+                      </div>
+
+                      <div className="achievement-item">
+                        <h6>Automated Testing</h6>
+                        <p>
+                          Designed and executed scripts for automating the testing of student assignments. These scripts 
+                          streamlined the grading process, provided consistent evaluation metrics, and allowed for more 
+                          detailed feedback to students on their code performance and correctness.
+                        </p>
+                      </div>
+
+                      <div className="achievement-item">
+                        <h6>Grading and Feedback</h6>
+                        <p>
+                          Evaluated student assignments and projects, providing constructive feedback on code quality, 
+                          algorithm efficiency, and problem-solving approaches. This feedback was crucial for helping 
+                          students improve their programming skills and develop good coding practices.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="impact-results">
+                    <h5>Impact and Skills Developed</h5>
+                    <div className="impact-grid">
+                      <div className="impact-item">
+                        <h6>Technical Mastery</h6>
+                        <p>Deepened understanding of fundamental CS concepts by teaching them to others with varying experience levels.</p>
+                      </div>
+                      <div className="impact-item">
+                        <h6>Communication Skills</h6>
+                        <p>Developed ability to explain complex technical concepts in clear, accessible ways to diverse students.</p>
+                      </div>
+                      <div className="impact-item">
+                        <h6>Leadership Experience</h6>
+                        <p>Led lab sessions for student groups, managing classroom dynamics and ensuring comprehensive support.</p>
+                      </div>
+                      <div className="impact-item">
+                        <h6>Student Mentorship</h6>
+                        <p>Provided mentorship beyond academics, offering guidance on career paths and learning opportunities.</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="tech-stack">
+                    <h5>Technologies and Concepts Taught</h5>
+                    <div className="tech-tags">
+                      <span>C++</span>
+                      <span>Linux</span>
+                      <span>Data Structures</span>
+                      <span>Algorithms</span>
+                      <span>Object-Oriented Programming</span>
+                      <span>Memory Management</span>
+                      <span>Debugging Techniques</span>
+                      <span>Git Version Control</span>
+                      <span>Algorithm Analysis</span>
+                      <span>Problem Solving</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+          </div>
         </div>
       )}
       
