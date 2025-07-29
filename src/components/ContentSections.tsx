@@ -1,4 +1,12 @@
 import React from 'react'
+import scaffoldingImage from '../assets/scaffolding.svg'
+import baseballImage from '../assets/baseball-diagram.webp'
+import baseballImage2 from '../assets/baseball-diagram2.webp'
+import baseballImage3 from '../assets/baseball-diagram3.webp'
+import baseballImage4 from '../assets/baseball-diagram4.webp'
+import baseballImage5 from '../assets/baseball-diagram5.webp'
+import baseballImage6 from '../assets/baseball-diagram6.webp'
+import robotImage from '../assets/maze-robot.png'
 
 interface ContentSectionsProps {
   activeSection: string | null
@@ -7,6 +15,14 @@ interface ContentSectionsProps {
 
 const ContentSections: React.FC<ContentSectionsProps> = ({ activeSection, onClose }) => {
   const [expandedExperience, setExpandedExperience] = React.useState<string | null>(null)
+  const [activeProject, setActiveProject] = React.useState<string | null>(null)
+  
+  // Reset activeProject when switching sections or closing
+  React.useEffect(() => {
+    if (activeSection !== 'projects') {
+      setActiveProject(null)
+    }
+  }, [activeSection])
   
   if (!activeSection) return null
 
@@ -100,10 +116,352 @@ const ContentSections: React.FC<ContentSectionsProps> = ({ activeSection, onClos
         </div>
       )}
       
-      {activeSection === 'projects' && (
+      {activeSection === 'projects' && !activeProject && (
         <div className="section projects-section">
           <h2>Projects</h2>
-          <p>Content coming soon...</p>
+          <div className="projects-content">
+            
+            <div 
+              className="experience-card project-card-clickable"
+              onClick={() => setActiveProject('scaffolding-project')}
+            >
+              <div className="experience-header project-card-simple">
+                <div className="project-details">
+                  <h3>Scaffolding Graphics Application</h3>
+                  <div className="tech-tags">
+                    <span>React</span>
+                    <span>Three.js</span>
+                    <span>WebGPU</span>
+                    <span>ifc.js</span>
+                    <span>Node.js</span>
+                    <span>CAD Integration</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div 
+              className="experience-card project-card-clickable"
+              onClick={() => setActiveProject('baseball-analytics')}
+            >
+              <div className="experience-header project-card-simple">
+                <div className="project-details">
+                  <h3>Machine Learning Applied to Baseball</h3>
+                  <h4>Texas A&M Baseball Research And Development Team</h4>
+                  <div className="tech-tags">
+                    <span>Python</span>
+                    <span>RandomForest</span>
+                    <span>Data Visualization</span>
+                    <span>Sports Analytics</span>
+                    <span>Scikit-learn</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div 
+              className="experience-card project-card-clickable"
+              onClick={() => setActiveProject('maze-robot')}
+            >
+              <div className="experience-header project-card-simple">
+                <div className="project-details">
+                  <h3>Autonomous Maze-Solving Robot with ROS 2 & LiDAR</h3>
+                  <div className="tech-tags">
+                    <span>ROS 2</span>
+                    <span>C++</span>
+                    <span>Python</span>
+                    <span>LiDAR</span>
+                    <span>SLAM</span>
+                    <span>Path Planning</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      )}
+
+      {activeSection === 'projects' && activeProject === 'scaffolding-project' && (
+        <div className="section project-detail-section">
+          <div className="project-detail-header">
+            <button 
+              className="back-button"
+              onClick={() => setActiveProject(null)}
+            >
+              ← Back to Projects
+            </button>
+            <h2>Scaffolding Graphics Application</h2>
+          </div>
+          
+          <div className="project-detail-content">
+            <div className="project-hero">
+              <div className="project-hero-image">
+                <img src={scaffoldingImage} alt="Scaffolding Application" />
+              </div>
+              <div className="project-hero-info">
+                <p className="project-overview">
+                  Developed a sophisticated application enabling users to define building dimensions, 
+                  extrude complex structures, implement scaffolding systems, and automatically generate 
+                  Bills of Materials (BOM). This cutting-edge application serves as a valuable tool for 
+                  construction and engineering projects.
+                </p>
+                <div className="tech-tags">
+                  <span>React</span>
+                  <span>Three.js</span>
+                  <span>WebGPU</span>
+                  <span>ifc.js</span>
+                  <span>Node.js</span>
+                  <span>CAD Integration</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="achievements">
+              <h5>Key Features</h5>
+              <div className="achievement-items">
+                <div className="achievement-item">
+                  <h6>Interactive Measurement Tools</h6>
+                  <p>Precise building dimension tools for accurate structural planning with real-time measurements and validation</p>
+                </div>
+                <div className="achievement-item">
+                  <h6>Dynamic 3D Structure Extrusion</h6>
+                  <p>Convert 2D floor plans into detailed 3D structures with automated roof generation and customizable architectural styles</p>
+                </div>
+                <div className="achievement-item">
+                  <h6>Automated Scaffolding Generation</h6>
+                  <p>Intelligent scaffolding system generation with material customization, safety compliance, and drag-and-drop interface for modifications</p>
+                </div>
+                <div className="achievement-item">
+                  <h6>Real-time BOM Generation</h6>
+                  <p>Automatically generate and export comprehensive Bills of Materials with cost estimation, supplier integration, and inventory tracking</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="tech-stack">
+              <h5>Technical Implementation</h5>
+              <div className="achievement-items">
+                <div className="achievement-item">
+                  <h6>WebGPU Rendering Pipeline</h6>
+                  <p>High-performance 3D graphics rendering using WebGPU for smooth real-time visualization of complex architectural structures</p>
+                </div>
+                <div className="achievement-item">
+                  <h6>Instanced Mesh Rendering</h6>
+                  <p>Efficient visualization of thousands of scaffold elements using GPU instancing techniques for optimal performance</p>
+                </div>
+                <div className="achievement-item">
+                  <h6>GPU Compute Shaders</h6>
+                  <p>Accelerated geometry updates, collision detection, and lighting calculations using compute shaders</p>
+                </div>
+                <div className="achievement-item">
+                  <h6>WebAssembly Integration</h6>
+                  <p>High-performance parsing of IFC files in-browser using WASM for seamless BIM model integration</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {activeSection === 'projects' && activeProject === 'baseball-analytics' && (
+        <div className="section project-detail-section baseball-detail">
+          <div className="project-detail-header">
+            <button 
+              className="back-button"
+              onClick={() => setActiveProject(null)}
+            >
+              ← Back to Projects
+            </button>
+            <h2>Baseball Umpire Decision Analysis (Detailed Overview)</h2>
+          </div>
+          
+          <div className="project-detail-content">
+            <div className="baseball-intro">
+              <p>
+                Along with one of my teammates for the Research and Development team for Texas A&M baseball, we took on an exciting project that 
+                combined our love for sports with the power of machine learning. Our goal was to analyze and predict baseball umpire calls using 
+                machine learning techniques, specifically focusing on how umpires decide whether a pitch is a ball or a strike.
+              </p>
+            </div>
+
+            <div className="baseball-diagram-section">
+              <div className="baseball-diagram">
+                <img src={baseballImage} alt="Baseball Strike Zone Diagram" />
+              </div>
+            </div>
+
+            <div className="baseball-section">
+              <h3>Project Objective</h3>
+              <p>
+                Our primary objective was to develop a Python script that leverages a RandomForestClassifier to identify patterns in umpire decision-making. 
+                By doing so, we aimed to understand the factors influencing these calls and improve the accuracy and objectivity of baseball officiating.
+              </p>
+            </div>
+
+            <div className="baseball-section">
+              <h3>Data Collection and Preprocessing</h3>
+              <p>
+                We began our journey by immersing ourselves in the world of baseball data. We meticulously gathered extensive pitch data from 
+                multiple seasons, capturing crucial details like location coordinates, velocity, movement patterns, and of course, the umpire's call. 
+                This wasn't just about collecting numbers—we were capturing decision moments that would help us understand the human element of 
+                the game.
+              </p>
+              <p>
+                Our preprocessing phase was where we really rolled up our sleeves. We cleaned messy data points, standardized measurements across 
+                different stadiums, and normalized values to ensure fair comparisons. One of our most insightful decisions was to segregate the data by 
+                individual umpires, allowing us to build personalized models that recognized each umpire's unique tendencies and decision-making 
+                patterns. This approach helped us capture the subtleties that make baseball such a beautifully human game.
+              </p>
+
+              <div className="baseball-diagrams-section">
+                <div className="baseball-diagram">
+                  <img src={baseballImage2} alt="Baseball Data Collection" />
+                </div>
+                <div className="baseball-diagram">
+                  <img src={baseballImage3} alt="Baseball Data Preprocessing" />
+                </div>
+              </div>
+            </div>
+
+            <div className="baseball-section">
+              <h3>Building the RandomForestClassifier</h3>
+              <p>
+                With our data prepared, we turned to the RandomForestClassifier—a powerful machine learning algorithm that we felt was perfectly 
+                suited for this challenge. We chose this approach because it excels at handling complex decision boundaries and can capture the 
+                nuanced factors that influence an umpire's split-second judgment calls.
+              </p>
+              <p>
+                We carefully divided our dataset into training and testing sets, making sure we had enough historical data to train robust models while 
+                keeping some data aside for honest evaluation. This was our way of simulating how our models would perform in real-world scenarios. 
+                Through countless iterative runs, fine-tuned the models, watching with excitement as they began to recognize patterns in the data that 
+                aligned with what seasoned baseball fans intuitively understood about umpire tendencies.
+              </p>
+            </div>
+
+            <div className="baseball-section">
+              <h3>Visualization</h3>
+              <p>
+                To make our findings more intuitive, we incorporated visualization techniques, including decision boundary visualization to help 
+                understand how different factors influence the umpire's calls. Recognizing areas for improvement in our initial script, we implemented 
+                several enhancements and optimizations. Cross-validation was introduced to ensure the model's robustness and accuracy, 
+                providing a more reliable performance evaluation.
+              </p>
+              <p>
+                We also developed a hyperparameter tuning script to optimize the model for each umpire, resulting in more precise configurations 
+                tailored to individual decision-making patterns. Additionally, feature importance analysis was conducted to identify the most influential 
+                features, such as pitch location and type, in the decision-making process, thereby offering deeper insights into the factors that impact 
+                umpire calls.
+              </p>
+              
+              <div className="baseball-visualization-section">
+                <div className="baseball-diagram">
+                  <img src={baseballImage4} alt="Baseball Visualization 1" />
+                </div>
+                <div className="baseball-diagram">
+                  <img src={baseballImage5} alt="Baseball Visualization 2" />
+                </div>
+                <div className="baseball-diagram">
+                  <img src={baseballImage6} alt="Baseball Visualization 3" />
+                </div>
+              </div>
+            </div>
+
+            <div className="baseball-section">
+              <h3>Outcomes and Insights</h3>
+              <p>
+                By integrating machine learning, our project significantly enhanced the understanding of umpire decision patterns in baseball. The 
+                model provided deep insights into the decision-making process of umpires, potentially leading to fairer and more consistent officiating. 
+                This technological integration promises to reduce human error and bias, thereby improving the overall quality of the sport.
+              </p>
+              <p>
+                This project illustrated the dynamic intersection of technology and sports, highlighting how innovations in machine learning can 
+                revolutionize traditional sports practices. The ability to predict umpire calls with high accuracy showcases the potential for continuous 
+                improvement and innovation in sports analytics.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {activeSection === 'projects' && activeProject === 'maze-robot' && (
+        <div className="section project-detail-section">
+          <div className="project-detail-header">
+            <button 
+              className="back-button"
+              onClick={() => setActiveProject(null)}
+            >
+              ← Back to Projects
+            </button>
+            <h2>Autonomous Maze-Solving Robot with ROS 2 & LiDAR</h2>
+          </div>
+          
+          <div className="project-detail-content">
+            <div className="project-hero">
+              <div className="project-hero-image">
+                <img src={robotImage} alt="Maze-Solving Robot" />
+              </div>
+              <div className="project-hero-info">
+                <p className="project-overview">
+                  Developed software for an autonomous maze-solving robot utilizing ROS 2 Humble for distributed computing, 
+                  RPLidar A1 for environmental mapping, and Jetson Nano for real-time processing. Implemented advanced path 
+                  planning algorithms, including Fast-Marching Trees and Bezier curves, achieving efficient navigation through complex mazes.
+                </p>
+                <div className="tech-tags">
+                  <span>ROS 2</span>
+                  <span>C++</span>
+                  <span>Python</span>
+                  <span>LiDAR</span>
+                  <span>SLAM</span>
+                  <span>Path Planning</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="achievements">
+              <h5>Technical Implementation</h5>
+              <div className="achievement-items">
+                <div className="achievement-item">
+                  <h6>Distributed System Architecture</h6>
+                  <p>Built using ROS 2's publisher-subscriber architecture for decoupled component communication, enabling scalable and maintainable robotic systems</p>
+                </div>
+                <div className="achievement-item">
+                  <h6>Real-time SLAM Processing</h6>
+                  <p>Developed custom mapping and localization nodes that process RPLidar A1 scan data at 8kHz for real-time environmental understanding</p>
+                </div>
+                <div className="achievement-item">
+                  <h6>Advanced Path Planning</h6>
+                  <p>Implemented Fast-Marching Trees algorithm with trajectory optimization using Time-Optimal Path Parameterization (TOPPRA) for smooth navigation</p>
+                </div>
+                <div className="achievement-item">
+                  <h6>Comprehensive Visualization</h6>
+                  <p>Created RViz-based visualization tools for real-time debugging, path visualization, and system monitoring during autonomous operation</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="tech-stack">
+              <h5>Software Architecture Layers</h5>
+              <div className="impact-grid">
+                <div className="impact-item">
+                  <h6>Perception Layer</h6>
+                  <p>LiDAR data processing, noise filtering, feature extraction, and obstacle detection using custom ROS 2 nodes</p>
+                </div>
+                <div className="impact-item">
+                  <h6>Mapping & Localization</h6>
+                  <p>Occupancy grid generation with dynamic updates, loop closure detection, and persistent map storage for navigation</p>
+                </div>
+                <div className="impact-item">
+                  <h6>Path Planning</h6>
+                  <p>Global path generation with obstacle avoidance using Fast-Marching Trees and local trajectory optimization with Bezier curves</p>
+                </div>
+                <div className="impact-item">
+                  <h6>Motion Control</h6>
+                  <p>High-frequency PID control loops with encoder feedback integration and ODrive motor controller API for precise movement execution</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       )}
       
