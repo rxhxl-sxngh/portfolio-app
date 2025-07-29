@@ -17,6 +17,23 @@
   z-index: 20;
   overflow-y: auto;
   animation: slideIn 0.3s ease-out;
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: center center;
+}
+
+/* Fullscreen mode - keeps same positioning system */
+.content-sections.fullscreen {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100vw;
+  height: 100vh;
+  max-width: none;
+  max-height: none;
+  border-radius: 0;
+  padding: 40px;
+  border: none;
+  box-shadow: none;
 }
 
 .section h2 {
@@ -54,11 +71,42 @@
   background: #ff00ff;
 }
 
-/* Close button for sections */
-.close-section {
+/* Header buttons container */
+.section-header-buttons {
   position: absolute;
   top: 10px;
   right: 15px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+/* Expand button for sections */
+.expand-section {
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  color: #00ffff;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: all 0.3s ease;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.expand-section:hover {
+  opacity: 1;
+  background: rgba(0, 255, 255, 0.1);
+  transform: scale(1.1);
+}
+
+/* Close button for sections */
+.close-section {
   background: none;
   border: none;
   font-size: 2rem;
@@ -730,6 +778,16 @@
   .baseball-diagrams-section,
   .baseball-visualization-section {
     gap: 15px;
+  }
+
+  /* Fullscreen adjustments for mobile */
+  .content-sections.fullscreen {
+    padding: 20px;
+  }
+  
+  .section-header-buttons {
+    top: 10px;
+    right: 10px;
   }
 }
 

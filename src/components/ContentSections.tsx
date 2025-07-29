@@ -20,6 +20,7 @@ interface ContentSectionsProps {
 const ContentSections: React.FC<ContentSectionsProps> = ({ activeSection, onClose }) => {
   const [expandedExperience, setExpandedExperience] = React.useState<string | null>(null)
   const [activeProject, setActiveProject] = React.useState<string | null>(null)
+  const [isFullScreen, setIsFullScreen] = React.useState<boolean>(false)
   
   // Reset activeProject when switching sections or closing
   React.useEffect(() => {
@@ -28,15 +29,29 @@ const ContentSections: React.FC<ContentSectionsProps> = ({ activeSection, onClos
     }
   }, [activeSection])
   
+  // Reset fullscreen when switching sections or closing
+  React.useEffect(() => {
+    setIsFullScreen(false)
+  }, [activeSection])
+  
   if (!activeSection) return null
 
   return (
-    <div className="content-sections" onClick={(e) => {
+    <div className={`content-sections ${isFullScreen ? 'fullscreen' : ''}`} onClick={(e) => {
       if (e.target === e.currentTarget || (e.target as Element).textContent === '×') {
         onClose()
       }
     }}>
-      <button className="close-section" onClick={onClose}>×</button>
+      <div className="section-header-buttons">
+        <button 
+          className="expand-section" 
+          onClick={() => setIsFullScreen(!isFullScreen)}
+          title={isFullScreen ? 'Exit fullscreen' : 'Expand to fullscreen'}
+        >
+          {isFullScreen ? '⤋' : '⤢'}
+        </button>
+        <button className="close-section" onClick={onClose}>×</button>
+      </div>
       
       {activeSection === 'about' && (
         <div className="section about-section">
