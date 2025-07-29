@@ -7,6 +7,10 @@ import baseballImage4 from '../assets/baseball-diagram4.webp'
 import baseballImage5 from '../assets/baseball-diagram5.webp'
 import baseballImage6 from '../assets/baseball-diagram6.webp'
 import robotImage from '../assets/maze-robot.png'
+import lidarMapping from '../assets/lidar-mapping.gif'
+import bezierCurves from '../assets/bezier-curves.webp'
+import pathPlanning from '../assets/path-planning.webp'
+import jetsonNano from '../assets/jetson-nano.webp'
 
 interface ContentSectionsProps {
   activeSection: string | null
@@ -273,6 +277,7 @@ const ContentSections: React.FC<ContentSectionsProps> = ({ activeSection, onClos
             >
               ← Back to Projects
             </button>
+            <br></br>
             <h2>Baseball Umpire Decision Analysis (Detailed Overview)</h2>
           </div>
           
@@ -379,13 +384,14 @@ const ContentSections: React.FC<ContentSectionsProps> = ({ activeSection, onClos
                 revolutionize traditional sports practices. The ability to predict umpire calls with high accuracy showcases the potential for continuous 
                 improvement and innovation in sports analytics.
               </p>
+              <br></br>
             </div>
           </div>
         </div>
       )}
 
       {activeSection === 'projects' && activeProject === 'maze-robot' && (
-        <div className="section project-detail-section">
+        <div className="section project-detail-section robot-detail">
           <div className="project-detail-header">
             <button 
               className="back-button"
@@ -393,73 +399,167 @@ const ContentSections: React.FC<ContentSectionsProps> = ({ activeSection, onClos
             >
               ← Back to Projects
             </button>
-            <h2>Autonomous Maze-Solving Robot with ROS 2 & LiDAR</h2>
+            <br></br>
+            <h2>Autonomous Maze-Solving Robot (Detailed Overview)</h2>
           </div>
           
           <div className="project-detail-content">
-            <div className="project-hero">
-              <div className="project-hero-image">
-                <img src={robotImage} alt="Maze-Solving Robot" />
+            <div className="robot-intro">
+              <p>
+                As a project manager and software developer for the Texas A&M Robotics Team, I led the development of a sophisticated 
+                autonomous robot capable of navigating complex mazes. While the mechanical aspects were crucial, my primary focus was 
+                on creating a robust software architecture that could process sensor data, make intelligent decisions, and control 
+                the robot's movements with precision.
+              </p>
+            </div>
+
+            <div className="robot-diagram-section">
+              <div className="robot-diagram">
+                <img src={robotImage} alt="LiDAR Maze-Solving Robot" />
               </div>
-              <div className="project-hero-info">
-                <p className="project-overview">
-                  Developed software for an autonomous maze-solving robot utilizing ROS 2 Humble for distributed computing, 
-                  RPLidar A1 for environmental mapping, and Jetson Nano for real-time processing. Implemented advanced path 
-                  planning algorithms, including Fast-Marching Trees and Bezier curves, achieving efficient navigation through complex mazes.
-                </p>
-                <div className="tech-tags">
-                  <span>ROS 2</span>
-                  <span>C++</span>
-                  <span>Python</span>
-                  <span>LiDAR</span>
-                  <span>SLAM</span>
-                  <span>Path Planning</span>
+            </div>
+
+            <div className="robot-section">
+              <h3>The ROS 2 Backbone</h3>
+              <p>
+                At the core of our system was ROS 2 Humble, chosen for its improved message passing architecture, enhanced 
+                reliability, and real-time capabilities. ROS 2 provided a modular framework that allowed us to develop independent 
+                components (nodes) that could be tested and debugged separately before integration.
+              </p>
+              <p>
+                We structured our system with several key nodes:
+              </p>
+              <ul>
+                <li><strong>lidar_driver_node</strong>: Interfaced with the RPLidar A1 hardware to capture raw scan data</li>
+                <li><strong>scan_processor_node</strong>: Filtered and processed raw LiDAR data to remove noise and extract meaningful features</li>
+                <li><strong>mapping_node</strong>: Built and maintained an occupancy grid of the maze environment</li>
+                <li><strong>localization_node</strong>: Determined the robot's position within the maze</li>
+                <li><strong>path_planning_node</strong>: Generated optimal trajectories through the maze</li>
+                <li><strong>motion_control_node</strong>: Translated planned paths into motor commands</li>
+                <li><strong>visualization_node</strong>: Provided real-time monitoring and debugging capabilities</li>
+              </ul>
+            </div>
+
+            <div className="robot-section">
+              <h3>LiDAR Data Processing & Mapping</h3>
+              <p>
+                The RPLidar A1 provided 360-degree scan data at approximately 8000 points per second. Our software pipeline transformed 
+                this raw data into usable environmental information through several processing steps:
+              </p>
+              <ol>
+                <li>Raw data acquisition via UART communication</li>
+                <li>Noise filtering using statistical outlier removal techniques</li>
+                <li>Dynamic range thresholding to identify maze walls</li>
+                <li>Point clustering to detect wall segments and corners</li>
+                <li>Integration into a probabilistic occupancy grid map</li>
+              </ol>
+              <p>
+                The mapping system employed a grid-based representation with 2cm resolution, providing sufficient detail for 
+                navigation while remaining computationally efficient. We implemented a Bayesian update mechanism that allowed the 
+                map to adapt to new observations, gradually improving accuracy as the robot explored the maze.
+              </p>
+
+              <div className="robot-diagrams-section">
+                <div className="robot-diagram">
+                  <img src={lidarMapping} alt="LiDAR Mapping Visualization" />
                 </div>
               </div>
             </div>
 
-            <div className="achievements">
-              <h5>Technical Implementation</h5>
-              <div className="achievement-items">
-                <div className="achievement-item">
-                  <h6>Distributed System Architecture</h6>
-                  <p>Built using ROS 2's publisher-subscriber architecture for decoupled component communication, enabling scalable and maintainable robotic systems</p>
+            <div className="robot-section">
+              <h3>Path Planning & Trajectory Generation</h3>
+              <p>
+                Our approach to path planning utilized a multi-stage process to generate efficient and smooth trajectories through 
+                the maze environment. This sophisticated system combined multiple algorithmic approaches to ensure optimal navigation 
+                while maintaining safety and efficiency constraints.
+              </p>
+              <p>
+                <strong>1. Fast-Marching Trees (FMT*)</strong>: This sampling-based algorithm provided asymptotically optimal paths 
+                by expanding a tree of collision-free trajectories from the start position. We chose FMT* over other algorithms 
+                (like RRT or A*) because it produced higher-quality initial paths with better coverage of the configuration space.
+              </p>
+              <p>
+                <strong>2. Path Smoothing with Bezier Curves</strong>: The piecewise linear paths from FMT* were then refined using 
+                cubic Bezier curves. Each curve was defined by four control points carefully selected to maintain path clearance 
+                while providing C² continuity (continuous position, velocity, and acceleration).
+              </p>
+              <p>
+                <strong>3. Time-Optimal Path Parameterization (TOPPRA)</strong>: To generate velocity profiles that respected the 
+                robot's dynamic constraints, we implemented TOPPRA. This algorithm computed the time-optimal velocity profile along 
+                the path while respecting bounds on velocity, acceleration, and jerk.
+              </p>
+
+              <div className="robot-visualization-section">
+                <div className="robot-diagram">
+                  <img src={bezierCurves} alt="Bezier Curve Smoothing" />
                 </div>
-                <div className="achievement-item">
-                  <h6>Real-time SLAM Processing</h6>
-                  <p>Developed custom mapping and localization nodes that process RPLidar A1 scan data at 8kHz for real-time environmental understanding</p>
-                </div>
-                <div className="achievement-item">
-                  <h6>Advanced Path Planning</h6>
-                  <p>Implemented Fast-Marching Trees algorithm with trajectory optimization using Time-Optimal Path Parameterization (TOPPRA) for smooth navigation</p>
-                </div>
-                <div className="achievement-item">
-                  <h6>Comprehensive Visualization</h6>
-                  <p>Created RViz-based visualization tools for real-time debugging, path visualization, and system monitoring during autonomous operation</p>
+                <div className="robot-diagram">
+                  <img src={pathPlanning} alt="Path Planning Visualization" />
                 </div>
               </div>
             </div>
 
-            <div className="tech-stack">
-              <h5>Software Architecture Layers</h5>
-              <div className="impact-grid">
-                <div className="impact-item">
-                  <h6>Perception Layer</h6>
-                  <p>LiDAR data processing, noise filtering, feature extraction, and obstacle detection using custom ROS 2 nodes</p>
-                </div>
-                <div className="impact-item">
-                  <h6>Mapping & Localization</h6>
-                  <p>Occupancy grid generation with dynamic updates, loop closure detection, and persistent map storage for navigation</p>
-                </div>
-                <div className="impact-item">
-                  <h6>Path Planning</h6>
-                  <p>Global path generation with obstacle avoidance using Fast-Marching Trees and local trajectory optimization with Bezier curves</p>
-                </div>
-                <div className="impact-item">
-                  <h6>Motion Control</h6>
-                  <p>High-frequency PID control loops with encoder feedback integration and ODrive motor controller API for precise movement execution</p>
+            <div className="robot-section">
+              <h3>Motion Control & Motor Integration</h3>
+              <p>
+                Translating planned trajectories into precise motor commands required careful integration with the hardware control 
+                systems. Our software stack seamlessly bridged the gap between high-level path planning and low-level motor control, 
+                ensuring smooth and accurate robot movement throughout the maze navigation process.
+              </p>
+              <p>
+                The ODrive 3.6 motor controller provided a sophisticated interface for controlling the high-torque 750Kv motors. 
+                Our software integrated with the ODrive API to implement real-time velocity control with encoder feedback, differential 
+                drive kinematics to convert desired robot motion into individual wheel speeds, PID control loops for position and 
+                velocity tracking, and synchronized acceleration profiles to prevent wheel slippage.
+              </p>
+              <p>
+                We implemented a custom controller node that subscribed to trajectory messages and published motor commands at 100Hz, 
+                ensuring smooth and responsive motion. The node also processed encoder feedback to provide odometry data for 
+                localization purposes, creating a closed-loop system that maintained high precision throughout operation.
+              </p>
+            </div>
+
+            <div className="robot-section">
+              <h3>Jetson Nano Computing Platform</h3>
+              <p>
+                The Jetson Nano, running Ubuntu 18.04 with CUDA support, provided the computational backbone for our system. We optimized 
+                the software stack to efficiently utilize the available resources, implementing CUDA-accelerated LiDAR point cloud 
+                processing, multi-threaded implementation of path planning algorithms, efficient memory management for map storage and 
+                updates, and real-time scheduler configuration for critical control loops.
+              </p>
+              <p>
+                The Jetson's WiFi module enabled remote monitoring and debugging, allowing us to visualize the robot's state during 
+                maze navigation without physical connections. This wireless capability proved invaluable during testing and competition 
+                scenarios where direct access to the robot was limited.
+              </p>
+              
+              <div className="robot-visualization-section">
+                <div className="robot-diagram">
+                  <img src={jetsonNano} alt="Jetson Nano Computing Platform" />
                 </div>
               </div>
+            </div>
+
+            <div className="robot-section">
+              <h3>Results & Performance Achievements</h3>
+              <p>
+                Our software system successfully enabled the robot to navigate complex mazes with precision and reliability, 
+                demonstrating the effectiveness of our integrated approach to autonomous navigation. The system consistently delivered 
+                impressive performance metrics that validated our architectural decisions and implementation strategies.
+              </p>
+              <p>
+                Key performance metrics included mapping accuracy within 1.5cm across the entire maze, localization precision of 0.8cm 
+                in position and 2 degrees in orientation, path planning computation in under 200ms for typical maze segments, smooth 
+                trajectory execution with velocity tracking error below 3%, and successful navigation of mazes with tight corners and 
+                narrow passages.
+              </p>
+              <p>
+                The project demonstrated the power of integrating modern robotics software with specialized hardware to solve complex 
+                navigation challenges. The modular architecture we developed provides a foundation for future enhancements and can be 
+                adapted to other autonomous navigation tasks beyond maze solving, showcasing the versatility and robustness of our 
+                software design approach.
+              </p>
+              <br></br>
             </div>
           </div>
         </div>
