@@ -763,17 +763,24 @@
     box-shadow: none !important;
   }
 
-  /* Header adjustments for mobile */
+  /* Header adjustments for mobile - move close button to left to avoid hamburger conflict */
   .section-header-buttons {
     top: 15px;
-    right: 15px;
+    left: 15px;
+    right: auto;
     z-index: 1001;
+    justify-content: flex-start;
   }
 
   .close-section {
     width: 40px;
     height: 40px;
     font-size: 1.8rem;
+    background: rgba(255, 0, 255, 0.1);
+  }
+
+  .close-section:hover {
+    background: rgba(255, 0, 255, 0.2);
   }
 
   /* Typography adjustments for mobile */
