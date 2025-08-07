@@ -26,6 +26,19 @@ const ContentSections: React.FC<ContentSectionsProps> = ({ activeSection, onClos
   const [expandedExperience, setExpandedExperience] = React.useState<string | null>(null)
   const [activeProject, setActiveProject] = React.useState<string | null>(null)
   const [isFullScreen, setIsFullScreen] = React.useState<boolean>(false)
+  const [isMobile, setIsMobile] = React.useState<boolean>(false)
+
+  // Check if device is mobile
+  React.useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768)
+    }
+    
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
   
   // Reset activeProject when switching sections or closing
   React.useEffect(() => {
@@ -42,19 +55,21 @@ const ContentSections: React.FC<ContentSectionsProps> = ({ activeSection, onClos
   if (!activeSection) return null
 
   return (
-    <div className={`content-sections ${isFullScreen ? 'fullscreen' : ''}`} onClick={(e) => {
+    <div className={`content-sections ${isFullScreen || isMobile ? 'fullscreen' : ''}`} onClick={(e) => {
       if (e.target === e.currentTarget || (e.target as Element).textContent === '×') {
         onClose()
       }
     }}>
       <div className="section-header-buttons">
-        <button 
-          className="expand-section" 
-          onClick={() => setIsFullScreen(!isFullScreen)}
-          title={isFullScreen ? 'Exit fullscreen' : 'Expand to fullscreen'}
-        >
-          {isFullScreen ? '⤋' : '⤢'}
-        </button>
+        {!isMobile && (
+          <button 
+            className="expand-section" 
+            onClick={() => setIsFullScreen(!isFullScreen)}
+            title={isFullScreen ? 'Exit fullscreen' : 'Expand to fullscreen'}
+          >
+            {isFullScreen ? '⤋' : '⤢'}
+          </button>
+        )}
         <button className="close-section" onClick={onClose}>×</button>
       </div>
       

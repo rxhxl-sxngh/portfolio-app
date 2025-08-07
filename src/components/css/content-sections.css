@@ -17,7 +17,7 @@
   z-index: 20;
   overflow-y: auto;
   animation: slideIn 0.3s ease-out;
-  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 1.5s cubic-bezier(0.4, 0, 0.2, 1);
   transform-origin: center center;
 }
 
@@ -746,8 +746,48 @@
   margin: 0 auto;
 }
 
-/* Responsive adjustments for project cards */
+/* Mobile Responsiveness */
 @media (max-width: 768px) {
+  /* Force fullscreen on mobile */
+  .content-sections {
+    top: 0 !important;
+    left: 0 !important;
+    transform: none !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    max-width: none !important;
+    max-height: none !important;
+    border-radius: 0 !important;
+    padding: 80px 20px 20px 20px !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Header adjustments for mobile */
+  .section-header-buttons {
+    top: 15px;
+    right: 15px;
+    z-index: 1001;
+  }
+
+  .close-section {
+    width: 40px;
+    height: 40px;
+    font-size: 1.8rem;
+  }
+
+  /* Typography adjustments for mobile */
+  .section h2 {
+    font-size: 1.6rem;
+    margin-bottom: 15px;
+    margin-top: 0;
+  }
+
+  .section p {
+    font-size: 1rem;
+  }
+
+  /* Project card adjustments */
   .project-card {
     flex-direction: column;
     gap: 12px;
@@ -759,6 +799,7 @@
     align-self: center;
   }
 
+  /* Project detail adjustments */
   .project-hero {
     flex-direction: column;
     gap: 20px;
@@ -771,23 +812,81 @@
   }
   
   .project-detail-section {
-    max-height: 75vh;
+    max-height: none;
     padding: 15px;
   }
 
+  .project-detail-header h2 {
+    font-size: 1.4rem;
+    line-height: 1.3;
+  }
+
+  /* Baseball and robot project adjustments */
   .baseball-diagrams-section,
-  .baseball-visualization-section {
+  .baseball-visualization-section,
+  .robot-diagrams-section,
+  .robot-visualization-section,
+  .scaffolding-diagrams-section {
     gap: 15px;
   }
 
-  /* Fullscreen adjustments for mobile */
-  .content-sections.fullscreen {
-    padding: 20px;
+  .baseball-diagram,
+  .robot-diagram,
+  .scaffolding-diagram {
+    padding: 15px;
+    max-width: 100%;
   }
-  
-  .section-header-buttons {
-    top: 10px;
-    right: 10px;
+
+  /* Experience card adjustments */
+  .experience-card {
+    margin-bottom: 15px;
+  }
+
+  .experience-header {
+    padding: 15px;
+  }
+
+  .experience-details {
+    padding: 0 15px 15px 15px;
+  }
+
+  /* Impact grid adjustment for mobile */
+  .impact-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  /* Tech stack table adjustment */
+  .tech-row {
+    flex-direction: column;
+    gap: 5px;
+    padding: 10px 12px;
+  }
+
+  .tech-name {
+    flex: none;
+  }
+
+  /* Skills and countries lists */
+  .skills-list,
+  .countries-list {
+    gap: 6px;
+  }
+
+  .skills-list span,
+  .countries-list span {
+    font-size: 0.8rem;
+    padding: 3px 6px;
+  }
+
+  /* Tech tags adjustments */
+  .tech-tags {
+    gap: 6px;
+  }
+
+  .tech-tags span {
+    font-size: 0.8rem;
+    padding: 3px 6px;
   }
 }
 

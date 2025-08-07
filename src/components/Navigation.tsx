@@ -1,30 +1,76 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 interface NavigationProps {
   onSectionChange: (section: string) => void
 }
 
 const Navigation: React.FC<NavigationProps> = ({ onSectionChange }) => {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+
+  const handleSectionClick = (section: string) => {
+    onSectionChange(section)
+    setIsMobileMenuOpen(false) // Close menu after selection
+  }
+
+  const handleHamburgerClick = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen)
+  }
+
   return (
     <>
-      {/* Left Navigation */}
-      <div className="nav-left">
-        <button className="nav-button" onClick={() => onSectionChange('about')}>
-          ABOUT
-        </button>
-        <button className="nav-button" onClick={() => onSectionChange('projects')}>
-          PROJECTS
-        </button>
+      {/* Desktop Navigation - Hidden on mobile */}
+      <div className="desktop-nav">
+        {/* Left Navigation */}
+        <div className="nav-left">
+          <button className="nav-button" onClick={() => onSectionChange('about')}>
+            ABOUT
+          </button>
+          <button className="nav-button" onClick={() => onSectionChange('projects')}>
+            PROJECTS
+          </button>
+        </div>
+
+        {/* Right Navigation */}
+        <div className="nav-right">
+          <button className="nav-button" onClick={() => onSectionChange('experience')}>
+            EXPERIENCE
+          </button>
+          <button className="nav-button" onClick={() => onSectionChange('writing')}>
+            WRITING
+          </button>
+        </div>
       </div>
 
-      {/* Right Navigation */}
-      <div className="nav-right">
-        <button className="nav-button" onClick={() => onSectionChange('experience')}>
-          EXPERIENCE
+      {/* Mobile Hamburger Menu */}
+      <div className="mobile-nav">
+        <button 
+          className="hamburger-button"
+          onClick={handleHamburgerClick}
+          aria-label="Toggle menu"
+        >
+          <span className={`hamburger-line ${isMobileMenuOpen ? 'open' : ''}`}></span>
+          <span className={`hamburger-line ${isMobileMenuOpen ? 'open' : ''}`}></span>
+          <span className={`hamburger-line ${isMobileMenuOpen ? 'open' : ''}`}></span>
         </button>
-        <button className="nav-button" onClick={() => onSectionChange('writing')}>
-          WRITING
-        </button>
+
+        {isMobileMenuOpen && (
+          <div className="mobile-menu-overlay" onClick={() => setIsMobileMenuOpen(false)}>
+            <div className="mobile-menu" onClick={(e) => e.stopPropagation()}>
+              <button className="mobile-nav-button" onClick={() => handleSectionClick('about')}>
+                ABOUT
+              </button>
+              <button className="mobile-nav-button" onClick={() => handleSectionClick('projects')}>
+                PROJECTS
+              </button>
+              <button className="mobile-nav-button" onClick={() => handleSectionClick('experience')}>
+                EXPERIENCE
+              </button>
+              <button className="mobile-nav-button" onClick={() => handleSectionClick('writing')}>
+                WRITING
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Bottom Social Icons */}
