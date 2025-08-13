@@ -16,6 +16,10 @@ import lidarMapping from '../assets/lidar-mapping.gif'
 import bezierCurves from '../assets/bezier-curves.webp'
 import pathPlanning from '../assets/path-planning.webp'
 import jetsonNano from '../assets/jetson-nano.webp'
+import vonsvision from '../assets/vonsvision.jpg'
+import leadership1 from '../assets/leadership1.jpg'
+import leadership2 from '../assets/leadership2.jpg'
+import hospice from '../assets/hospice.png'
 
 interface ContentSectionsProps {
   activeSection: string | null
@@ -25,6 +29,7 @@ interface ContentSectionsProps {
 const ContentSections: React.FC<ContentSectionsProps> = ({ activeSection, onClose }) => {
   const [expandedExperience, setExpandedExperience] = React.useState<string | null>(null)
   const [activeProject, setActiveProject] = React.useState<string | null>(null)
+  const [activeWriting, setActiveWriting] = React.useState<string | null>(null)
   const [isFullScreen, setIsFullScreen] = React.useState<boolean>(false)
   const [isMobile, setIsMobile] = React.useState<boolean>(false)
 
@@ -44,6 +49,13 @@ const ContentSections: React.FC<ContentSectionsProps> = ({ activeSection, onClos
   React.useEffect(() => {
     if (activeSection !== 'projects') {
       setActiveProject(null)
+    }
+  }, [activeSection])
+  
+  // Reset activeWriting when switching sections or closing
+  React.useEffect(() => {
+    if (activeSection !== 'writing') {
+      setActiveWriting(null)
     }
   }, [activeSection])
   
@@ -1027,10 +1039,414 @@ const ContentSections: React.FC<ContentSectionsProps> = ({ activeSection, onClos
         </div>
       )}
       
-      {activeSection === 'writing' && (
+      {activeSection === 'writing' && !activeWriting && (
         <div className="section writing-section">
           <h2>Writing</h2>
-          <p>Content coming soon...</p>
+          <div className="writing-content">
+            
+            <div 
+              className="experience-card project-card-clickable"
+              onClick={() => setActiveWriting('personal-growth')}
+            >
+              <div className="experience-header project-card-simple">
+                <div className="project-details">
+                  <h3>2024: A Year of Transformation and Learning</h3>
+                  <h4>March 15, 2025</h4>
+                  <p className="writing-excerpt">Reflecting on the most eventful year of my life, the challenges I faced, and the invaluable lessons I learned throughout my journey in 2024.</p>
+                  <div className="tech-tags">
+                    <span>Personal Growth</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div 
+              className="experience-card project-card-clickable"
+              onClick={() => setActiveWriting('giving-back')}
+            >
+              <div className="experience-header project-card-simple">
+                <div className="project-details">
+                  <h3>The Unexpected Gifts of Giving Back</h3>
+                  <h4>February 28, 2025</h4>
+                  <p className="writing-excerpt">How my experiences with volunteering and community service have transformed my perspective on success, happiness, and purpose.</p>
+                  <div className="tech-tags">
+                    <span>Community</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      )}
+
+      {activeSection === 'writing' && activeWriting === 'personal-growth' && (
+        <div className="section project-detail-section writing-detail">
+          <div className="project-detail-header">
+            <button 
+              className="back-button"
+              onClick={() => setActiveWriting(null)}
+            >
+              ← Back to Writing
+            </button>
+            <br></br>
+            <h2>2024: A Year of Transformation and Learning</h2>
+          </div>
+          
+          <div className="project-detail-content">
+            <div className="writing-intro">
+              <div className="writing-metadata">
+                <span>March 15, 2025</span>
+                <span className="category-tag">Personal Growth</span>
+              </div>
+              <p>
+                Looking back at 2024, I can confidently say it was the most challenging and transformative year of my life. It was a roller coaster of triumphs and tribulations that pushed me to my limits and taught me invaluable lessons about myself, my priorities, and what truly matters in my professional journey.
+              </p>
+            </div>
+
+            <div className="writing-section">
+              <h3>January: Juggling Multiple Roles</h3>
+              
+              <p>
+                The year kicked off with a sprint rather than a gentle start. I began my role as an AI/ML Engineer at NTT Data in January while maintaining my status as a full-time student at Texas A&M and continuing my position as an undergraduate teaching assistant. The hybrid arrangement with NTT seemed perfect on paper—I'd work remotely during the semester and transition to in-office during summer.
+              </p>
+              
+              <p>
+                Those first few weeks were equal parts exhilarating and exhausting. I'd bounce from morning classes to afternoon meetings with enterprise clients, then spend evenings preparing for the lab sessions I led as a TA. I remember sitting in my apartment at midnight, surrounded by half-finished assignments and work deliverables, wondering if I'd bitten off more than I could chew.
+              </p>
+            </div>
+
+            <div className="writing-section">
+              <h3>The International Scheduling Challenge</h3>
+              
+              <p>
+                Working for an international company like NTT Data came with its own unique challenges—namely, the brutal time zone differences. There were several occasions when I'd be on calls at 3 AM with development teams based in Asia, only to drag myself out of bed a few hours later for the 8 AM lab I was responsible for leading.
+              </p>
+              
+              <p>
+                I still vividly remember one particularly grueling week in February when I had three consecutive nights of late calls followed by early morning commitments. I was running on pure caffeine and determination, my eyes burning from lack of sleep as I tried to explain pointer concepts to my students while my brain was still processing discussions about NLP model optimizations from hours earlier.
+              </p>
+            </div>
+
+            <div className="writing-section">
+              <h3>March: Recognition Amidst Chaos</h3>
+              
+              <p>
+                As the semester progressed, the weight of my commitments became increasingly difficult to bear. Just when I was questioning whether all the sacrifice was worth it, I received some unexpected validation. In March, the Computer Science Department at A&M recognized me with the Undergraduate Leadership Excellence Award—an honor I'd mentioned in my previous blog, but one that came at a perfectly timed moment when I needed that affirmation.
+              </p>
+              
+              <p>
+                Standing on that stage, accepting the award while running on three hours of sleep, was a surreal moment. It felt like acknowledgment that yes, what I was doing was difficult, but it was also meaningful and noticed.
+              </p>
+            </div>
+
+            <div className="writing-section">
+              <h3>The Inevitable Breaking Point</h3>
+              
+              <p>
+                Despite that boost of confidence, reality eventually caught up with me. As my first semester of 2024 progressed, I became overwhelmed by the competing demands on my time and energy. The breaking point came when I realized I was consistently missing lectures for two of my classes due to recurring conflicts with important meetings at NTT Data.
+              </p>
+              
+              <p>
+                Making the decision to drop those two classes was incredibly difficult. It felt like admitting defeat, like I couldn't handle what I'd set out to do. But looking back, it was my first lesson of the year in setting realistic expectations and making necessary sacrifices to preserve my wellbeing and the quality of my work.
+              </p>
+              
+              <p>
+                The sweet victory came at the end of the semester when I managed to earn all A's in my remaining classes. It wasn't the full course load I'd ambitiously planned, but it represented quality over quantity—a concept I'd continue to wrestle with throughout the year.
+              </p>
+            </div>
+
+            <div className="writing-section">
+              <h3>Summer: A Different Kind of Busy</h3>
+              
+              <p>
+                Summer brought a shift in rhythm but not necessarily a lighter workload. I transitioned to working in-person at NTT Data, which eliminated the late-night international calls but introduced longer days at the office and a daily commute.
+              </p>
+              
+              <p>
+                My free time wasn't exactly "free" either—I dedicated much of it to working on the scaffolding project for a client through Quaternion Studios. Weekends became precious commodities spent hunched over my laptop, diving deep into 3D modeling and web graphics development.
+              </p>
+              
+              <p>
+                Despite the busy schedule, there was something refreshing about the change of pace. The more consistent hours and the diversity of projects kept me engaged and growing professionally in different directions.
+              </p>
+            </div>
+
+            <div className="writing-section">
+              <h3>August: Personal Upheaval and Rewarding Myself</h3>
+              
+              <p>
+                August marked a significant turning point in both my personal and professional life. After two years together, my girlfriend and I broke up—a painful but necessary conclusion to a relationship that had been strained by my increasingly demanding schedule and shifting priorities.
+              </p>
+              
+              <p>
+                In the wake of that emotional upheaval, and feeling burnt out from months of relentless work, I decided to do something completely uncharacteristic for me. Fueled partly by beneficial tax returns for electric vehicles and a limited-time 1.99% APR deal expiring at the end of August, I made my first major "adult" purchase—a Tesla.
+              </p>
+              
+              <p>
+                Was it the most financially prudent decision? Perhaps not. But sitting behind the wheel of that car represented something important to me at that moment—a tangible reward for my hard work, a symbol of my independence, and honestly, a much-needed boost to my spirits during a difficult time.
+              </p>
+            </div>
+
+            <div className="writing-section">
+              <h3>Fall Semester: History Repeats Itself</h3>
+              
+              <p>
+                As the fall semester began, I found myself back in the familiar juggling act between NTT Data and my academic commitments. My course load was particularly heavy, partly due to needing to make up for the classes I'd dropped in the spring.
+              </p>
+              
+              <p>
+                September brought one victory: the successful conclusion of our scaffolding project for Quaternion Studios' client. Seeing that project through to completion, with the client's enthusiastic approval, was deeply satisfying.
+              </p>
+              
+              <p>
+                But history has a way of repeating itself when we don't fully learn its lessons. Once again, I found myself struggling to balance my professional and academic responsibilities. Once again, I made the difficult decision to drop a class rather than compromise on quality or my wellbeing.
+              </p>
+            </div>
+
+            <div className="writing-section">
+              <h3>The Realization</h3>
+              
+              <p>
+                As the semester wound down and I reflected on the year, something crystallized for me. While my role at NTT Data had been rewarding in many ways—the technical challenges, the exposure to enterprise-level AI implementations, the credibility of working for an international company—I realized I wanted something different for my future.
+              </p>
+              
+              <p className="highlighted-text">
+                I wanted to be somewhere where I could contribute to culture just as much as the end product.
+              </p>
+              
+              <p>
+                This wasn't just about technical work or building impressive systems. I wanted to be part of shaping an environment, influencing how teams collaborated, and building something with values aligned with my own. At NTT, I was a small cog in an enormous machine. I'd learned tremendously, but I couldn't see a path to having the kind of impact I now knew I wanted.
+              </p>
+              
+              <p>
+                With another semester of all A's in my remaining courses (a achievement I'm still proud of given the circumstances), I made my decision. I resigned from my position at NTT Data as the semester came to a close.
+              </p>
+            </div>
+
+            <div className="writing-section">
+              <h3>Lessons from a Year of Growth</h3>
+              
+              <p>
+                Looking back at 2024, I can identify several invaluable lessons that will guide me moving forward:
+              </p>
+              
+              <ol className="writing-list">
+                <li>
+                  <span className="list-highlight">Quality over quantity is not just a saying—it's a survival strategy.</span> Taking on too much doesn't serve anyone well, least of all yourself. I learned to be more selective about my commitments and to give my full attention to fewer things rather than spreading myself too thin.
+                </li>
+                <li>
+                  <span className="list-highlight">Professional growth isn't linear.</span> Sometimes you need to take steps sideways or even backwards to ultimately move forward. Leaving NTT wasn't a failure; it was a recalibration based on a clearer understanding of what I truly value.
+                </li>
+                <li>
+                  <span className="list-highlight">Sleep is non-negotiable.</span> Those 3 AM calls followed by 8 AM labs took a toll that no amount of caffeine could offset. I've learned to prioritize rest as an essential component of sustainable performance.
+                </li>
+                <li>
+                  <span className="list-highlight">Personal milestones matter.</span> Buying my Tesla might seem trivial compared to professional accomplishments, but it represented an important personal milestone and a moment of joy during a difficult time.
+                </li>
+                <li>
+                  <span className="list-highlight">Culture and values alignment are as important as technical challenges.</span> This was perhaps my biggest realization—that where and how I work matters just as much as what I'm working on.
+                </li>
+              </ol>
+
+              <p>
+                As I step into 2025, I feel both humbled by the challenges of the past year and optimistic about what lies ahead. I'm carrying forward not just new technical skills from my time at NTT Data and Quaternion Studios, but a much deeper understanding of my own limits, values, and aspirations.
+              </p>
+              
+              <p>
+                The road wasn't straight, and it certainly wasn't always smooth, but every twist, turn, and bump has shaped me into someone better equipped to navigate whatever comes next.
+              </p>
+              
+              <p className="writing-conclusion">
+                Here's to growth, to learning, and to the journey ahead.
+              </p>
+            </div>
+            <br></br>
+          </div>
+        </div>
+      )}
+
+      {activeSection === 'writing' && activeWriting === 'giving-back' && (
+        <div className="section project-detail-section writing-detail">
+          <div className="project-detail-header">
+            <button 
+              className="back-button"
+              onClick={() => setActiveWriting(null)}
+            >
+              ← Back to Writing
+            </button>
+            <br></br>
+            <h2>The Unexpected Gifts of Giving Back</h2>
+          </div>
+          
+          <div className="project-detail-content">
+            <div className="writing-intro">
+              <div className="writing-metadata">
+                <span>February 28, 2025</span>
+                <span className="category-tag">Community</span>
+              </div>
+              <p>
+                In the competitive world of computer science and tech startups, it's easy to become fixated on building the next groundbreaking application, landing the perfect job, or mastering the latest programming language. While these pursuits have their place, my most profound lessons have come from somewhere unexpected – giving back to others.
+              </p>
+            </div>
+
+            <div className="writing-section">
+              <h3>A Commitment to Service: 100 Hours in One Semester</h3>
+              
+              <p>
+                My journey with community service began with small volunteering efforts during my freshman year, but it was during my sophomore year at Texas A&M that I decided to make a more substantial commitment. I challenged myself to complete 100 hours of community service in a single semester – all while maintaining my academic responsibilities and other extracurricular activities.
+              </p>
+              
+              <p>
+                These hours were split across various initiatives: volunteering at local food banks, participating in campus clean-up events, tutoring underprivileged students in STEM subjects, and organizing charitable fundraisers. Some weekends, I would dedicate entire days to service projects, returning to my apartment exhausted but fulfilled in a way that coding sessions or exam preparation never quite matched.
+              </p>
+              
+              <p>
+                One of the most rewarding initiatives was my involvement with the Brazos Valley Hospice Happening fundraiser. Working alongside an incredible team of volunteers, we organized an event that raised thousands of dollars to support hospice care for patients and families in our community during their most vulnerable moments.
+              </p>
+
+              <div className="image-section">
+                <div className="image-container">
+                  <img src={hospice} alt="Brazos Valley Hospice Happening Fundraiser" />
+                </div>
+                <p className="image-caption">Sitting in front of my team at the Brazos Valley Hospice Happening fundraiser, where my team helped raise thousands of dollars to support compassionate end-of-life care for patients and families in need.</p>
+              </div>
+            </div>
+
+            <div className="writing-section">
+              <h3>Von Miller's Gig 'Em Gala: A Highlight of My Service Journey</h3>
+              
+              <p>
+                Among the various service projects I participated in, one particular highlight was leading the auction fundraiser for Von Miller's Gig 'Em Gala. Super Bowl MVP Von Miller had established Von's Vision, a foundation dedicated to providing eye exams and glasses to underprivileged children.
+              </p>
+              
+              <p>
+                I still remember the blend of excitement and nervousness as I coordinated with donors, organized auction items, and managed a team of fellow volunteers. The event itself was a whirlwind of activity – NFL players in attendance, alumni making generous bids, and a palpable sense of community coming together for a cause greater than ourselves.
+              </p>
+              
+              <p>
+                By the end of the evening, we had raised over $300,000 – funds that would directly impact the lives of children who otherwise wouldn't have access to proper vision care. The number itself was impressive, but what stayed with me was something deeper: the realization that my skills in organization, communication, and leadership could be channeled toward making a tangible difference in people's lives.
+              </p>
+
+              <div className="image-section">
+                <div className="image-container">
+                  <img src={vonsvision} alt="Von Miller's Gig 'Em Gala Fundraiser" />
+                </div>
+                <p className="image-caption">At the Von Miller's Gig 'Em Gala auction, where our team worked with Super Bowl L MVP Von Miller to raise over $300,000 for children in need of vision care.</p>
+              </div>
+            </div>
+
+            <div className="writing-section">
+              <h3>The Undergraduate Leadership Excellence Award</h3>
+
+              <p>
+                My dedication to community service, combined with my academic achievements and other leadership roles, ultimately contributed to my receiving the Undergraduate Leadership Excellence Award from the Texas A&M Computer Science Department. This honor is one that I deeply cherish not merely for the recognition itself, but for what it represents: the validation that technical excellence and community service aren't separate paths but complementary journeys.
+              </p>
+
+              <p>
+                I'm particularly grateful to Dr. Hyunyoung Lee, who played a major role in my receiving this award. Her mentorship and encouragement pushed me to excel not only in my technical pursuits but also in finding ways to use those skills to benefit others and the broader community.
+              </p>
+
+              <div className="image-grid">
+                <div className="image-container">
+                  <img src={leadership1} alt="Leadership Award Ceremony 1" />
+                </div>
+                <div className="image-container">
+                  <img src={leadership2} alt="Leadership Award Ceremony 2" />
+                </div>
+              </div>
+              <p className="image-caption">
+                Receiving the Undergraduate Leadership Excellence Award from the Texas A&M Computer Science Department, recognizing both academic achievements and community service efforts.
+              </p>
+            </div>
+
+            <div className="writing-section">
+              <h3>The Robotics Team: Beyond Technical Skills</h3>
+              
+              <p>
+                My involvement with the Texas A&M Robotics Team offered another dimension of giving back. While most of my time was dedicated to developing our maze-solving robot and contributing to the technical aspects of the project, some of my most meaningful experiences came from our outreach initiatives.
+              </p>
+              
+              <p>
+                We organized workshops for local high school students, introducing them to robotics and programming concepts in accessible, hands-on ways. Seeing the spark of curiosity in their eyes – especially from students who had never considered engineering as a potential path – was incredibly rewarding.
+              </p>
+              
+              <p>
+                Our fundraising efforts were equally significant. Through various events and initiatives, we raised over $1,000 to support both our team's projects and community programs. These experiences taught me that technical knowledge becomes exponentially more valuable when shared with others and applied toward collective goals.
+              </p>
+            </div>
+
+            <div className="writing-section">
+              <h3>Teaching: The Reciprocal Gift</h3>
+              
+              <p>
+                Perhaps no experience has better exemplified the reciprocal nature of giving than my role as a Teaching Assistant at Texas A&M. While officially I was there to help students grasp complex programming concepts and navigate data structures and algorithms, the reality is that I've received as much as I've given.
+              </p>
+              
+              <p>
+                Each time I explain a concept to a struggling student, my own understanding deepens. Each time I help troubleshoot a challenging piece of code, my problem-solving skills sharpen. The questions students ask often push me to reconsider my assumptions and explore new perspectives.
+              </p>
+              
+              <p>
+                One particularly memorable experience involved a student who was consistently struggling with linked list implementations. After several one-on-one sessions and alternative explanations, something finally clicked. The joy and confidence on his face in that moment – and watching him go on to help other students with the same concept – reminded me that knowledge shared creates a beautiful multiplier effect.
+              </p>
+            </div>
+
+            <div className="writing-section">
+              <h3>Unexpected Benefits: What Giving Has Given Me</h3>
+              
+              <p>
+                Through these varied experiences with community service, outreach, and teaching, I've received gifts I hadn't anticipated:
+              </p>
+              
+              <ol className="writing-list">
+                <li>
+                  <span className="list-highlight">Perspective:</span> Immersing myself in service has repeatedly pulled me out of the tech bubble and connected me with diverse people and their unique challenges. This broader perspective has made me a more empathetic developer, focused on creating solutions that truly address human needs rather than just showcasing technical prowess.
+                </li>
+                <li>
+                  <span className="list-highlight">Purpose:</span> While technical accomplishments bring satisfaction, nothing compares to the sense of purpose that comes from directly improving others' lives. This purpose has become a north star, guiding career decisions and project choices.
+                </li>
+                <li>
+                  <span className="list-highlight">Network:</span> Through volunteering and community involvement, I've connected with remarkable people across various fields – people I wouldn't have met within the confined circles of tech and academia. These relationships have enriched both my personal and professional life.
+                </li>
+                <li>
+                  <span className="list-highlight">Resilience:</span> Community service often presents unpredictable challenges and requires adaptability. These experiences have built a resilience that translates directly to entrepreneurial endeavors and technical problem-solving.
+                </li>
+                <li>
+                  <span className="list-highlight">Leadership:</span> Leading volunteer initiatives has developed a different kind of leadership – one based on inspiration and shared purpose rather than authority. These skills have proven invaluable in both academic group projects and professional settings.
+                </li>
+              </ol>
+            </div>
+
+            <div className="writing-section">
+              <h3>Making Giving a Lifelong Practice</h3>
+              
+              <p>
+                As I look toward graduation and beyond, I'm committed to integrating service into my life and career. At Quaternion Studios, we're exploring ways to dedicate a percentage of our time to pro bono work for nonprofits that need technical solutions but lack resources. In my personal life, I'm seeking consistent volunteer opportunities rather than one-off events.
+              </p>
+              
+              <p>
+                The tech industry offers unique opportunities for giving back – whether through mentoring aspiring developers, contributing to open-source projects, or building tools that address social challenges. I believe we have both the capability and responsibility to use our skills for more than just profit and career advancement.
+              </p>
+            </div>
+
+            <div className="writing-section">
+              <h3>An Invitation</h3>
+              
+              <p>
+                If you're reading this – especially if you're a fellow student or tech professional – I encourage you to explore how your specific skills might serve others. Start small and consistent rather than grand and occasional. Look for opportunities within your existing communities. Be open to the possibility that in giving, you'll receive far more than you expect.
+              </p>
+              
+              <p>
+                As the computer scientist Alan Kay once said, "The best way to predict the future is to invent it." Through giving back, we can collectively invent a future where technology and talent serve everyone, not just the privileged few.
+              </p>
+              
+              <p className="writing-conclusion">
+                "We make a living by what we get, but we make a life by what we give." - Winston Churchill
+              </p>
+            </div>
+            <br></br>
+          </div>
         </div>
       )}
     </div>
