@@ -51,12 +51,14 @@ const PortfolioVisualizer: React.FC = () => {
           Your browser does not support the audio element.
         </audio>
 
-        <div className="audio-permission" id="audioPermission">
-          <div style={{ fontSize: '1.5rem', marginBottom: '15px' }}>🎵 WELCOME TO MY PAGE</div>
-          <div style={{ fontSize: '0.9rem', opacity: 0.8, marginTop: '10px' }}>
-            Best experienced with sound on.<br />
+        <div className="audio-permission-overlay" id="audioPermissionOverlay">
+          <div className="audio-permission" id="audioPermission">
+            <div style={{ fontSize: '1.5rem', marginBottom: '15px' }}>🎵 WELCOME TO MY PAGE</div>
+            <div style={{ fontSize: '0.9rem', opacity: 0.8, marginTop: '10px' }}>
+              Best experienced with sound on.<br />
+            </div>
+            <button id="enableAudio">MEET ME</button>
           </div>
-          <button id="enableAudio">MEET ME</button>
         </div>
 
         <div className="loading" id="loading">

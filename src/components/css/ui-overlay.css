@@ -134,17 +134,30 @@
   margin-bottom: 5px;
 }
 
+.audio-permission-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 9999;
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.audio-permission-overlay.hidden {
+  display: none;
+}
+
 .audio-permission {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   background: rgba(0, 0, 0, 0.9);
   padding: 30px;
   border-radius: 15px;
   border: 2px solid #00ffff;
   text-align: center;
-  z-index: 25;
   pointer-events: auto;
 }
 

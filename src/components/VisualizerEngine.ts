@@ -1179,8 +1179,8 @@ class VisualizerEngine {
       enableAudioBtn.addEventListener('click', () => {
         this.audioEnabled = true
         this.setupAudio()
-        const audioPermission = document.getElementById('audioPermission')
-        if (audioPermission) audioPermission.classList.add('hidden')
+        const audioPermissionOverlay = document.getElementById('audioPermissionOverlay')
+        if (audioPermissionOverlay) audioPermissionOverlay.classList.add('hidden')
         
         // Auto-start the music
         if (this.audioContext?.state === 'suspended') {
@@ -1195,10 +1195,10 @@ class VisualizerEngine {
 
     // Click anywhere to start (fallback)
     document.addEventListener('click', (e) => {
-      if (!this.audioEnabled && !(e.target as Element)?.closest('#audioPermission')) {
+      if (!this.audioEnabled && !(e.target as Element)?.closest('#audioPermissionOverlay')) {
         // Show audio permission prompt
-        const audioPermission = document.getElementById('audioPermission')
-        if (audioPermission) audioPermission.classList.remove('hidden')
+        const audioPermissionOverlay = document.getElementById('audioPermissionOverlay')
+        if (audioPermissionOverlay) audioPermissionOverlay.classList.remove('hidden')
       }
     }, { once: true })
   }
