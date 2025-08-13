@@ -27,7 +27,6 @@ class VisualizerEngine {
   rimPulsers: any[] = []
   rimWaveRings: any[] = []
   rimDimensionalTears: any[] = []
-  rimEnergyTentacles: any[] = []
   
   // Northern lights camera rim glow
   northernLightsElements: any[] = []
@@ -126,7 +125,6 @@ class VisualizerEngine {
     this.createRimPulsers()
     this.createRimWaveRings()
     this.createRimDimensionalTears()
-    this.createRimEnergyTentacles()
     
     // Create northern lights camera rim glow
     this.createNorthernLightsGlow()
@@ -584,93 +582,6 @@ class VisualizerEngine {
     }
   }
 
-  createRimEnergyTentacles() {
-    const THREE = window.THREE
-    
-    for (let i = 0; i < 12; i++) {
-      const points = []
-      const segments = 20
-      const angle = (i / 12) * Math.PI * 2
-      const baseRadius = 110
-      
-      for (let j = 0; j <= segments; j++) {
-        const t = j / segments
-        const radius = baseRadius + t * 40
-        const twist = t * Math.PI * 3 + angle
-        const wobble = Math.sin(t * Math.PI * 4) * 10
-        
-        points.push(new THREE.Vector3(
-          Math.cos(angle) * radius + Math.cos(twist) * wobble,
-          Math.sin(angle) * radius + Math.sin(twist) * wobble,
-          (t - 0.5) * 60 + Math.sin(t * Math.PI * 2) * 20
-        ))
-      }
-      
-      const geometry = new THREE.TubeGeometry(
-        new THREE.CatmullRomCurve3(points),
-        segments,
-        1 + Math.random() * 2,
-        8,
-        false
-      )
-      
-      const material = new THREE.ShaderMaterial({
-        uniforms: {
-          time: { value: 0 },
-          bassLevel: { value: 0 },
-          highLevel: { value: 0 },
-          tentaclePhase: { value: i * 0.523 }
-        },
-        vertexShader: `
-          uniform float time;
-          uniform float bassLevel;
-          uniform float tentaclePhase;
-          varying vec2 vUv;
-          varying vec3 vPosition;
-          
-          void main() {
-            vUv = uv;
-            vPosition = position;
-            
-            vec3 pos = position;
-            float wave = sin(vUv.x * 10.0 + time * 5.0 + tentaclePhase) * bassLevel * 3.0;
-            pos += normal * wave;
-            
-            gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
-          }
-        `,
-        fragmentShader: `
-          uniform float time;
-          uniform float bassLevel;
-          uniform float highLevel;
-          uniform float tentaclePhase;
-          varying vec2 vUv;
-          varying vec3 vPosition;
-          
-          void main() {
-            float pulse = sin(vUv.x * 5.0 + time * 8.0 + tentaclePhase) * 0.5 + 0.5;
-            float energy = pulse * (bassLevel + highLevel);
-            
-            float hue = mod(tentaclePhase + energy + time * 0.4, 1.0);
-            vec3 color = vec3(
-              sin(hue * 6.28318 + 0.5) * 0.5 + 0.5,
-              sin(hue * 6.28318 + 2.5) * 0.5 + 0.5,
-              sin(hue * 6.28318 + 4.5) * 0.5 + 0.5
-            );
-            
-            float alpha = energy * (0.5 + pulse * 0.5);
-            gl_FragColor = vec4(color, alpha);
-          }
-        `,
-        transparent: true,
-        blending: THREE.AdditiveBlending
-      })
-      
-      const tentacle = new THREE.Mesh(geometry, material)
-      this.rimEnergyTentacles.push(tentacle)
-      // this.scene.add(tentacle)  // Temporarily hidden
-    }
-  }
 
   createNorthernLightsGlow() {
     const THREE = window.THREE
@@ -1106,21 +1017,6 @@ class VisualizerEngine {
         
         // Wobbling rotation
         tear.rotation.z += 0.01 + this.bassLevel * 0.05
-      })
-
-      // Update rim energy tentacles
-      this.rimEnergyTentacles.forEach((tentacle, index) => {
-        tentacle.material.uniforms.time.value = this.time
-        tentacle.material.uniforms.bassLevel.value = this.bassLevel
-        tentacle.material.uniforms.highLevel.value = this.highLevel
-        
-        // Writhing movement
-        tentacle.rotation.y += 0.02 + this.bassLevel * 0.06
-        tentacle.rotation.z += 0.01 + this.highLevel * 0.04
-        
-        // Scale pulsing
-        const scale = 1 + Math.sin(this.time * 5 + index) * 0.3 + this.bassLevel * 0.8
-        tentacle.scale.setScalar(scale)
       })
 
       // Update northern lights glow
