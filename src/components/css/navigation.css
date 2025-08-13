@@ -224,7 +224,7 @@
   }
   
   .social-icons {
-    bottom: 20px;
+    bottom: max(20px, env(safe-area-inset-bottom, 20px));
     gap: 20px;
   }
   
