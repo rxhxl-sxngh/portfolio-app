@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import VisualizerEngine from './VisualizerEngine'
 import Navigation from './Navigation'
 import ContentSections from './ContentSections'
@@ -7,7 +8,34 @@ import './PortfolioVisualizer.css'
 const PortfolioVisualizer: React.FC = () => {
   const canvasRef = useRef<HTMLDivElement>(null)
   const visualizerRef = useRef<VisualizerEngine | null>(null)
+  const location = useLocation()
+  const navigate = useNavigate()
   const [activeSection, setActiveSection] = useState<string | null>(null)
+
+  // Sync URL path with activeSection state
+  useEffect(() => {
+    const path = location.pathname
+    if (path === '/' || path === '') {
+      setActiveSection(null)
+    } else {
+      const pathParts = path.substring(1).split('/') // Remove leading '/' and split
+      const section = pathParts[0]
+      const validSections = ['about', 'projects', 'experience', 'writing']
+      if (validSections.includes(section)) {
+        setActiveSection(section)
+      }
+    }
+  }, [location.pathname])
+
+  // Handle section changes - update URL without page reload
+  const handleSectionChange = (section: string | null) => {
+    setActiveSection(section)
+    if (section) {
+      navigate(`/${section}`, { replace: false })
+    } else {
+      navigate('/', { replace: false })
+    }
+  }
 
   useEffect(() => {
     // Load Three.js
@@ -42,9 +70,9 @@ const PortfolioVisualizer: React.FC = () => {
           <div style={{ fontSize: '1rem', marginTop: '10px', opacity: 0.8 }}>CRAFT EXPERIENCES WORTH REMEMBERING.</div>
         </div>
         
-        <Navigation onSectionChange={setActiveSection} />
+        <Navigation onSectionChange={handleSectionChange} />
 
-        <ContentSections activeSection={activeSection} onClose={() => setActiveSection(null)} />
+        <ContentSections activeSection={activeSection} onClose={() => handleSectionChange(null)} />
 
         <audio id="audioElement" preload="auto" style={{ display: 'none' }}>
           <source src="Fade Together.mp3" type="audio/mpeg" />

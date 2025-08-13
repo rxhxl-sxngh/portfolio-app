@@ -1,4 +1,5 @@
 import React from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import scaffoldingImage from '../assets/scaffolding.svg'
 import scaffolding2Image from '../assets/Scaffolding2.webp'
 import scaffolding3Image from '../assets/Scaffolding3.webp'
@@ -27,6 +28,8 @@ interface ContentSectionsProps {
 }
 
 const ContentSections: React.FC<ContentSectionsProps> = ({ activeSection, onClose }) => {
+  const location = useLocation()
+  const navigate = useNavigate()
   const [expandedExperience, setExpandedExperience] = React.useState<string | null>(null)
   const [activeProject, setActiveProject] = React.useState<string | null>(null)
   const [activeWriting, setActiveWriting] = React.useState<string | null>(null)
@@ -44,6 +47,31 @@ const ContentSections: React.FC<ContentSectionsProps> = ({ activeSection, onClos
     
     return () => window.removeEventListener('resize', checkMobile)
   }, [])
+
+  // Sync URL with activeProject and activeWriting
+  React.useEffect(() => {
+    const pathParts = location.pathname.substring(1).split('/')
+    const section = pathParts[0]
+    const subsection = pathParts[1]
+
+    if (section === 'projects' && subsection) {
+      const validProjects = ['scaffolding-project', 'baseball-analytics', 'maze-robot']
+      if (validProjects.includes(subsection)) {
+        setActiveProject(subsection)
+      }
+    } else if (section === 'projects') {
+      setActiveProject(null)
+    }
+
+    if (section === 'writing' && subsection) {
+      const validWritings = ['personal-growth', 'giving-back']
+      if (validWritings.includes(subsection)) {
+        setActiveWriting(subsection)
+      }
+    } else if (section === 'writing') {
+      setActiveWriting(null)
+    }
+  }, [location.pathname])
   
   // Reset activeProject when switching sections or closing
   React.useEffect(() => {
@@ -63,6 +91,25 @@ const ContentSections: React.FC<ContentSectionsProps> = ({ activeSection, onClos
   React.useEffect(() => {
     setIsFullScreen(false)
   }, [activeSection])
+
+  // Helper functions for navigation
+  const handleProjectChange = (project: string | null) => {
+    setActiveProject(project)
+    if (project) {
+      navigate(`/projects/${project}`, { replace: false })
+    } else {
+      navigate('/projects', { replace: false })
+    }
+  }
+
+  const handleWritingChange = (writing: string | null) => {
+    setActiveWriting(writing)
+    if (writing) {
+      navigate(`/writing/${writing}`, { replace: false })
+    } else {
+      navigate('/writing', { replace: false })
+    }
+  }
   
   if (!activeSection) return null
 
@@ -174,7 +221,7 @@ const ContentSections: React.FC<ContentSectionsProps> = ({ activeSection, onClos
             
             <div 
               className="experience-card project-card-clickable"
-              onClick={() => setActiveProject('scaffolding-project')}
+              onClick={() => handleProjectChange('scaffolding-project')}
             >
               <div className="experience-header project-card-simple">
                 <div className="project-details">
@@ -194,7 +241,7 @@ const ContentSections: React.FC<ContentSectionsProps> = ({ activeSection, onClos
 
             <div 
               className="experience-card project-card-clickable"
-              onClick={() => setActiveProject('baseball-analytics')}
+              onClick={() => handleProjectChange('baseball-analytics')}
             >
               <div className="experience-header project-card-simple">
                 <div className="project-details">
@@ -213,7 +260,7 @@ const ContentSections: React.FC<ContentSectionsProps> = ({ activeSection, onClos
 
             <div 
               className="experience-card project-card-clickable"
-              onClick={() => setActiveProject('maze-robot')}
+              onClick={() => handleProjectChange('maze-robot')}
             >
               <div className="experience-header project-card-simple">
                 <div className="project-details">
@@ -239,7 +286,7 @@ const ContentSections: React.FC<ContentSectionsProps> = ({ activeSection, onClos
           <div className="project-detail-header">
             <button 
               className="back-button"
-              onClick={() => setActiveProject(null)}
+              onClick={() => handleProjectChange(null)}
             >
               ← Back to Projects
             </button>
@@ -513,7 +560,7 @@ const ContentSections: React.FC<ContentSectionsProps> = ({ activeSection, onClos
           <div className="project-detail-header">
             <button 
               className="back-button"
-              onClick={() => setActiveProject(null)}
+              onClick={() => handleProjectChange(null)}
             >
               ← Back to Projects
             </button>
@@ -635,7 +682,7 @@ const ContentSections: React.FC<ContentSectionsProps> = ({ activeSection, onClos
           <div className="project-detail-header">
             <button 
               className="back-button"
-              onClick={() => setActiveProject(null)}
+              onClick={() => handleProjectChange(null)}
             >
               ← Back to Projects
             </button>
@@ -1046,7 +1093,7 @@ const ContentSections: React.FC<ContentSectionsProps> = ({ activeSection, onClos
             
             <div 
               className="experience-card project-card-clickable"
-              onClick={() => setActiveWriting('personal-growth')}
+              onClick={() => handleWritingChange('personal-growth')}
             >
               <div className="experience-header project-card-simple">
                 <div className="project-details">
@@ -1062,7 +1109,7 @@ const ContentSections: React.FC<ContentSectionsProps> = ({ activeSection, onClos
 
             <div 
               className="experience-card project-card-clickable"
-              onClick={() => setActiveWriting('giving-back')}
+              onClick={() => handleWritingChange('giving-back')}
             >
               <div className="experience-header project-card-simple">
                 <div className="project-details">
@@ -1085,7 +1132,7 @@ const ContentSections: React.FC<ContentSectionsProps> = ({ activeSection, onClos
           <div className="project-detail-header">
             <button 
               className="back-button"
-              onClick={() => setActiveWriting(null)}
+              onClick={() => handleWritingChange(null)}
             >
               ← Back to Writing
             </button>
@@ -1271,7 +1318,7 @@ const ContentSections: React.FC<ContentSectionsProps> = ({ activeSection, onClos
           <div className="project-detail-header">
             <button 
               className="back-button"
-              onClick={() => setActiveWriting(null)}
+              onClick={() => handleWritingChange(null)}
             >
               ← Back to Writing
             </button>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
 interface NavigationProps {
-  onSectionChange: (section: string) => void
+  onSectionChange: (section: string | null) => void
 }
 
 const Navigation: React.FC<NavigationProps> = ({ onSectionChange }) => {

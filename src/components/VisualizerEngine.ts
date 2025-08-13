@@ -55,6 +55,9 @@ class VisualizerEngine {
     setTimeout(() => {
       const loading = document.getElementById('loading')
       if (loading) loading.classList.add('hidden')
+      
+      // Ensure audio overlay shows after loading, regardless of initial URL
+      this.ensureAudioOverlayVisible()
     }, 2000)
   }
 
@@ -1061,6 +1064,16 @@ class VisualizerEngine {
     }
   }
 
+  ensureAudioOverlayVisible() {
+    // Always show the audio overlay when the visualizer initializes, unless audio is already enabled
+    if (!this.audioEnabled) {
+      const audioPermissionOverlay = document.getElementById('audioPermissionOverlay')
+      if (audioPermissionOverlay) {
+        audioPermissionOverlay.classList.remove('hidden')
+      }
+    }
+  }
+
   setupEventListeners() {
     // Resize handler
     window.addEventListener('resize', () => {
@@ -1089,14 +1102,16 @@ class VisualizerEngine {
       })
     }
 
-    // Click anywhere to start (fallback)
+    // Click anywhere to start (fallback) - only needed if overlay isn't shown automatically
     document.addEventListener('click', (e) => {
       if (!this.audioEnabled && !(e.target as Element)?.closest('#audioPermissionOverlay')) {
-        // Show audio permission prompt
+        // Show audio permission prompt if it's not already visible
         const audioPermissionOverlay = document.getElementById('audioPermissionOverlay')
-        if (audioPermissionOverlay) audioPermissionOverlay.classList.remove('hidden')
+        if (audioPermissionOverlay && audioPermissionOverlay.classList.contains('hidden')) {
+          audioPermissionOverlay.classList.remove('hidden')
+        }
       }
-    }, { once: true })
+    })
   }
 
   animate() {
